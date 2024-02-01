@@ -8,12 +8,12 @@ export type RoleDocument = HydratedDocument<Role>;
 export class Role {
 
     @Prop()
-    roleId: string;
+    name: string;
 
     @Prop()
     isActive: boolean;
 
-    @Prop({type: [Types.ObjectId], ref: Permission.name})
+    @Prop({ type: [Types.ObjectId], ref: Permission.name })
     permissions: Permission[];
 
     @Prop({ type: Object })

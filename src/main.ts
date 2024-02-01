@@ -3,6 +3,7 @@ import { AppModule } from './app.module';
 import { VersioningType } from '@nestjs/common';
 import cookieParser = require('cookie-parser');
 import { TransformInterceptor } from './core/transform.interceptor';
+import { JwtAuthGuard } from './auth/jwt-auth.guard';
 require('dotenv').config()
 
 async function bootstrap() {
@@ -10,7 +11,7 @@ async function bootstrap() {
   const reflector = app.get(Reflector)
   
   //Khai báo Guard global để bảo vệ tất cả các route
-  // app.useGlobalGuards(new JwtAuthGuard(reflector))
+  app.useGlobalGuards(new JwtAuthGuard(reflector))
 
   //Sửa lỗi CORS, trường origin dùng để định nghĩa các domain có thể truy cập backend
   app.enableCors({

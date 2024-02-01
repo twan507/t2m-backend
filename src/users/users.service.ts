@@ -8,6 +8,8 @@ import { SoftDeleteModel } from 'soft-delete-plugin-mongoose';
 import { compareSync, genSaltSync, hashSync } from 'bcryptjs';
 import aqp from 'api-query-params';
 import { Role, RoleDocument } from 'src/roles/schemas/role.schemas';
+import { USER_ROLE } from 'src/databases/sample';
+import { Types } from 'mongoose';
 
 @Injectable()
 export class UsersService {
@@ -38,9 +40,9 @@ export class UsersService {
       password: hashPassword,
       name,
       phoneNumber,
-      affiliateCode: affiliateCode ? affiliateCode : "",
-      sponsorCode: sponsorCode ? sponsorCode : "",
-      role,
+      affiliateCode: affiliateCode ? affiliateCode : null,
+      sponsorCode: sponsorCode ? sponsorCode : null,
+      role: new Types.ObjectId(role),
       createdBy: {
         _id: user._id,
         email: user.email
@@ -55,7 +57,7 @@ export class UsersService {
     if (isExist) {
       throw new BadRequestException(`Email: ${email} đã tồn tại, vui lòng sử dụng email khác`)
     }
-    const userRole = await this.roleModel.findOne({ roleId: "USER" })
+    const userRole = await this.roleModel.findOne({ name: USER_ROLE })
     const hashPassword = this.getHashPassword(password)
     let newRegister = await this.userModel.create({
       email,
@@ -86,7 +88,6 @@ export class UsersService {
       .populate(population)
       .select("-password")
       .exec()
-
     return {
       meta: {
         current: currentPage,
@@ -104,7 +105,7 @@ export class UsersService {
     const user = await this.userModel
       .findOne({ _id: id })
       .select("-password -tokens") // Loại bỏ password và tokens khỏi kết quả trả về
-    .populate({ path: "role", select: { name: 1, _id: 1 } });
+      .populate({ path: "role", select: { name: 1, _id: 1 } });
     if (!user) {
       throw new BadRequestException("Không tìm thấy User");
     }

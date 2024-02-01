@@ -18,15 +18,15 @@ export class RolesService {
 
   async create(createRoleDto: CreateRoleDto, user: IUser) {
 
-    const { roleId, isActive, permissions } = createRoleDto
-    const isExist = await this.roleModel.findOne({ roleId })
+    const { name, isActive, permissions } = createRoleDto
+    const isExist = await this.roleModel.findOne({ name })
 
     if (isExist) {
-      throw new BadRequestException(`Role có tên là ${roleId} đã tồn tại`)
+      throw new BadRequestException(`Role có tên là ${name} đã tồn tại`)
     }
 
     const newRole = await this.roleModel.create({
-      roleId, isActive, permissions,
+      name, isActive, permissions,
       createdBy: {
         _id: user._id,
         email: user.email
@@ -96,7 +96,7 @@ export class RolesService {
     // Nếu không tìm thấy người dùng hoặc người dùng là admin
     if (!foundUser) {
       throw new BadRequestException("Không tìm thấy Role");
-    } else if (foundUser.roleId in ["ADMIN", "USER"]) {
+    } else if (foundUser.name in ["ADMIN", "USER"]) {
       throw new BadRequestException("Không thể xoá role ADMIN và USER")
     }
     // Cập nhật thông tin người xóa

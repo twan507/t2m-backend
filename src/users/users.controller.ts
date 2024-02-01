@@ -10,7 +10,6 @@ export class UsersController {
   constructor(private readonly usersService: UsersService) { }
 
   @Post()
-  @Public()
   @ResponseMessage("Create a new user")
   async create(
     @Body() createUserDto: CreateUserDto,
