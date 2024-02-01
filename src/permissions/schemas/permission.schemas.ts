@@ -1,35 +1,21 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument, Types } from 'mongoose';
-import { Role } from 'src/roles/schemas/role.schemas';
 
-export type UserDocument = HydratedDocument<User>;
+export type PermissionDocument = HydratedDocument<Permission>;
 
 @Schema({ timestamps: true })
-export class User {
-    
-    @Prop()
-    email: string;
-    
-    @Prop()
-    password: string;
-
+export class Permission {
     @Prop()
     name: string;
 
     @Prop()
-    phoneNumber: string;
+    apiPath: string;
 
     @Prop()
-    affiliateCode: string;
+    method: string;
 
     @Prop()
-    sponsorCode: string;
-
-    // @Prop({ type: Types.ObjectId, ref: License.name})
-    // licenses: Types.ObjectId;
-
-    @Prop({ type: Types.ObjectId, ref: Role.name})
-    role: Types.ObjectId;
+    module: string;
 
     @Prop({ type: Object })
     createdBy: {
@@ -60,9 +46,6 @@ export class User {
 
     @Prop()
     deletedAt: Date;
-
-    @Prop()
-    tokens: string[]
 }
 
-export const UserSchema = SchemaFactory.createForClass(User);
+export const PermissionSchema = SchemaFactory.createForClass(Permission);

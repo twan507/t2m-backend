@@ -16,3 +16,7 @@ export const User = createParamDecorator(
 export const RESPONSE_MESSAGE = 'response_message'
 export const ResponseMessage = (message: string) =>
   SetMetadata(RESPONSE_MESSAGE, message)
+
+  //Decorator bỏ qua việc check permission
+export const IS_PUBLIC_PERMISSION = 'isPublicPermission';
+export const SkipCheckPermission = () => SetMetadata(IS_PUBLIC_PERMISSION, true);

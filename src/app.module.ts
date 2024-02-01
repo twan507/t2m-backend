@@ -7,6 +7,7 @@ import { AuthModule } from './auth/auth.module';
 import { softDeletePlugin } from 'soft-delete-plugin-mongoose';
 import { PermissionsModule } from './permissions/permissions.module';
 import { RolesModule } from './roles/roles.module';
+import { DatabasesModule } from './databases/databases.module';
 require('dotenv').config()
 
 @Module({
@@ -21,7 +22,8 @@ require('dotenv').config()
       })
     }),
     PermissionsModule,
-    RolesModule
+    RolesModule,
+    DatabasesModule
   ],
   controllers: [AppController],
   providers: [AppService],

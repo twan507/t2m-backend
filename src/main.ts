@@ -3,7 +3,6 @@ import { AppModule } from './app.module';
 import { VersioningType } from '@nestjs/common';
 import cookieParser = require('cookie-parser');
 import { TransformInterceptor } from './core/transform.interceptor';
-
 require('dotenv').config()
 
 async function bootstrap() {
