@@ -1,6 +1,6 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { CreateUserDto } from './dto/create-user.dto';
+import { AdminChangePasswordDto, ChangePasswordDto, CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { Public, ResponseMessage, User } from 'src/decorator/customize';
 import { IUser } from './users.interface';
@@ -22,6 +22,22 @@ export class UsersController {
     }
   }
 
+  @Post('change-password')
+  changePassword(
+    @Body() changePasswordDto: ChangePasswordDto,
+    @User() user: IUser
+  ) {
+    return this.usersService.changePassword(changePasswordDto, user)
+  }
+
+  @Post('admin-change-password')
+  adminChangePassword(
+    @Body() adminChangePasswordDto: AdminChangePasswordDto,
+    @User() user: IUser
+  ) {
+    return this.usersService.adminChangePassword(adminChangePasswordDto, user)
+  }
+
   @Get()
   @ResponseMessage("Fetch list user with paginate")
   findAll(
@@ -32,7 +48,6 @@ export class UsersController {
     return this.usersService.findAll(+currentPage, +limit, qs);
   }
 
-  @Public()
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.usersService.findOne(id);

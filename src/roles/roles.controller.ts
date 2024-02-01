@@ -15,7 +15,6 @@ export class RolesController {
   }
 
   @Get()
-  @Public()
   @ResponseMessage("Fetch list Role with paginate")
   findAll(
     @Query("current") current: string,

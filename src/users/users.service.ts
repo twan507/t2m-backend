@@ -1,5 +1,5 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { CreateUserDto } from './dto/create-user.dto';
+import { AdminChangePasswordDto, ChangePasswordDto, CreateUserDto, RegisterUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { User, UserDocument } from './schemas/user.schemas';
@@ -28,12 +28,70 @@ export class UsersService {
     return hash;
   }
 
+  isValidPassword(password: string, hash: string) {
+    return compareSync(password, hash)
+  }
+
+  findOneByUsername(username: string) {
+    return this.userModel.findOne({
+      email: username
+    }).populate({ path: "role", select: { name: 1 } })
+  }
+
+  async adminChangePassword(adminChangePasswordDto: AdminChangePasswordDto, user: IUser) {
+    const {email, newPassword, confirmPassword } = adminChangePasswordDto
+
+    const isExist = await this.userModel.findOne({ email })
+    if (!isExist) {
+      throw new BadRequestException(`Không tìm thấy người dùng có Email: ${email}`)
+    }
+    if (newPassword === confirmPassword) {
+      await this.userModel.updateOne(
+        { email: email },
+        {
+          password: this.getHashPassword(newPassword),
+          updatedBy: {
+            _id: user._id,
+            email: user.email,
+          }
+        })
+    } else {
+      throw new BadRequestException("Mật khẩu xác nhận không trùng khớp")
+    }
+  }
+
+  async changePassword(changePasswordDto: ChangePasswordDto, user: IUser) {
+    const { currentPassword, newPassword, confirmPassword } = changePasswordDto
+    const foundUser = await this.findOneByUsername(user.email)
+    if (newPassword === confirmPassword) {
+      if (this.isValidPassword(currentPassword, foundUser.password)) {
+        await this.userModel.updateOne(
+          { email: user.email },
+          {
+            password: this.getHashPassword(newPassword),
+            updatedBy: {
+              _id: user._id,
+              email: user.email,
+            },
+          }
+        );
+      } else {
+        throw new BadRequestException("Sai mật khẩu")
+      }
+    } else {
+      throw new BadRequestException("Mật khẩu xác nhận không trùng khớp")
+    }
+  }
+
   async create(createUserDto: CreateUserDto, user: IUser) {
     const { email, password, name, phoneNumber, affiliateCode, sponsorCode, role } = createUserDto
+
     const isExist = await this.userModel.findOne({ email })
     if (isExist) {
       throw new BadRequestException(`Email: ${email} đã tồn tại, vui lòng sử dụng email khác`)
     }
+
+    const roleId = await this.roleModel.findOne({ name: role })
     const hashPassword = this.getHashPassword(password)
     let newUser = await this.userModel.create({
       email,
@@ -42,7 +100,7 @@ export class UsersService {
       phoneNumber,
       affiliateCode: affiliateCode ? affiliateCode : null,
       sponsorCode: sponsorCode ? sponsorCode : null,
-      role: new Types.ObjectId(role),
+      role: roleId._id,
       createdBy: {
         _id: user._id,
         email: user.email
@@ -51,12 +109,18 @@ export class UsersService {
     return newUser;
   }
 
-  async register(createUserDto: CreateUserDto) {
-    const { email, password, name, phoneNumber, affiliateCode, sponsorCode, role } = createUserDto
+  async register(registerUserDto: RegisterUserDto) {
+    const { email, password, name, phoneNumber, affiliateCode, sponsorCode, confirmPassword } = registerUserDto
+
     const isExist = await this.userModel.findOne({ email })
     if (isExist) {
       throw new BadRequestException(`Email: ${email} đã tồn tại, vui lòng sử dụng email khác`)
     }
+
+    if (password !== confirmPassword) {
+      throw new BadRequestException(`Mật khẩu xác nhận không trùng khớp`)
+    }
+
     const userRole = await this.roleModel.findOne({ name: USER_ROLE })
     const hashPassword = this.getHashPassword(password)
     let newRegister = await this.userModel.create({
@@ -98,8 +162,6 @@ export class UsersService {
       result
     }
   }
-
-  // const foundRole = await this.roleModel.findById(id)
 
   async findOne(id: string) {
     const user = await this.userModel
@@ -181,16 +243,6 @@ export class UsersService {
       { _id: _id },
       { $set: { tokens: newTokensList } }
     );
-  }
-
-  isValidPassword(password: string, hash: string) {
-    return compareSync(password, hash)
-  }
-
-  findOneByUsername(username: string) {
-    return this.userModel.findOne({
-      email: username
-    }).populate({ path: "role", select: { name: 1 } })
   }
 
   async findUserByToken(refreshToken: string) {

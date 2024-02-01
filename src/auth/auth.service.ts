@@ -2,7 +2,7 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { UsersService } from 'src/users/users.service';
 import { JwtService } from '@nestjs/jwt';
 import { IUser } from 'src/users/users.interface';
-import { CreateUserDto } from 'src/users/dto/create-user.dto';
+import { CreateUserDto, RegisterUserDto } from 'src/users/dto/create-user.dto';
 import { Response } from 'express';
 import ms from 'ms';
 import { RolesService } from 'src/roles/roles.service';
@@ -32,7 +32,6 @@ export class AuthService {
             if (isValid === true) {
 
                 const userRole = user.role as unknown as {_id: string, name: string}
-                console.log(">>>check _id:", user)
                 const temp = await this.rolesService.findOne(userRole._id)
 
                 const objUser = {
@@ -87,8 +86,8 @@ export class AuthService {
         };
     }
 
-    async register(createUserDto: CreateUserDto) {
-        let newUser = await this.usersService.register(createUserDto)
+    async register(registerUserDto: RegisterUserDto) {
+        let newUser = await this.usersService.register(registerUserDto)
         return {
             _id: newUser?._id,
             createdAt: newUser?.createdAt

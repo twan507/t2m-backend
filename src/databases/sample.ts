@@ -3,6 +3,46 @@ export const USER_ROLE = "NORMAL_USER";
 
 export const INIT_PERMISSIONS = [
     {
+        "_id": "0494c9b6434f9ebc3406d8b6",
+        "name": "ADMIN Change Password",
+        "apiPath": "/api/v1/users/admin-change-password",
+        "method": "POST",
+        "module": "USERS",
+        "createdBy": {
+            "_id": "65bb94a7aff281ff5a0496f7",
+            "email": "admin@t2m.vn"
+        },
+        "isDeleted": false,
+        "deletedAt": null,
+        "createdAt": "2023-06-15T06:47:49.369Z",
+        "updatedAt": "2023-06-15T06:54:05.131Z",
+        "__v": 0,
+        "updatedBy": {
+            "_id": "65bb94a7aff281ff5a0496f7",
+            "email": "admin@t2m.vn"
+        }
+    },
+    {
+        "_id": "280d2c9b559d0108e0545ea6",
+        "name": "Change Password",
+        "apiPath": "/api/v1/users/change-password",
+        "method": "POST",
+        "module": "USERS",
+        "createdBy": {
+            "_id": "65bb94a7aff281ff5a0496f7",
+            "email": "admin@t2m.vn"
+        },
+        "isDeleted": false,
+        "deletedAt": null,
+        "createdAt": "2023-06-15T06:47:49.369Z",
+        "updatedAt": "2023-06-15T06:54:05.131Z",
+        "__v": 0,
+        "updatedBy": {
+            "_id": "65bb94a7aff281ff5a0496f7",
+            "email": "admin@t2m.vn"
+        }
+    },
+    {
         "_id": "38ee0de078e246854040944b",
         "name": "Delete a User by ID",
         "apiPath": "/api/v1/users/:id",

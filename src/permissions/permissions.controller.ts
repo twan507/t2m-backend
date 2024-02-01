@@ -15,7 +15,6 @@ export class PermissionsController {
   }
 
   @Get()
-  @Public()
   @ResponseMessage("Fetch list permission with paginate")
   findAll(
     @Query("current") current: string,

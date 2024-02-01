@@ -64,6 +64,7 @@ export class DatabasesService implements OnModuleInit {
                         email: "admin@t2m.vn",
                         password: this.userService.getHashPassword(process.env.INIT_PASSWORD),
                         name: "T2M ADMIN",
+                        affiliateCode: "VIP000",
                         phoneNumber: "0123456789",
                         role: adminRole?._id
                     },
