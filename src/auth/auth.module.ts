@@ -6,15 +6,9 @@ import { PassportModule } from '@nestjs/passport';
 import { RolesModule } from 'src/roles/roles.module';
 import ms from 'ms';
 import { MongooseModule } from '@nestjs/mongoose';
-import { Role, RoleSchema } from 'src/roles/schemas/role.schemas';
 import { LocalStrategy } from './passport/local.strategy';
 import { JwtStrategy } from './passport/jwt.strategy';
-import { RolesService } from 'src/roles/roles.service';
 import { License, LicenseSchema } from 'src/licenses/schemas/license.schemas';
-import { UserSchema } from 'src/users/schemas/user.schemas';
-import { User } from 'src/decorator/customize';
-import { Product, ProductSchema } from 'src/products/schemas/product.schemas';
-import { ProductsModule } from 'src/products/products.module';
 import { UsersModule } from 'src/users/users.module';
 import { LicensesModule } from 'src/licenses/licenses.module';
 
@@ -31,10 +25,7 @@ import { LicensesModule } from 'src/licenses/licenses.module';
     }),
 
     MongooseModule.forFeature([
-      { name: Role.name, schema: RoleSchema },
       { name: License.name, schema: LicenseSchema },
-      { name: User.name, schema: UserSchema },
-      { name: Product.name, schema: ProductSchema }
     ])
 
   ],
