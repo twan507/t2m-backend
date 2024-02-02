@@ -26,6 +26,28 @@ export class LicensesService {
   ) { }
 
 
+  async updateLincesesDaysLeft() {
+    const allLincenses = await this.licenseModel.find()
+    for (const lincense of allLincenses) {
+      const daysLeft = (lincense.endDate.getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24)
+      if (daysLeft > 0) {
+        await this.licenseModel.updateOne(
+          { _id: lincense._id },
+          { daysLeft }
+        )
+      } else {
+        await this.licenseModel.updateOne(
+          { _id: lincense._id },
+          { isActive: false }
+        )
+        await this.userModel.updateOne(
+          { email: lincense.userEmail },
+          { license: "" }
+        )
+      }
+    }
+  }
+
   async create(createLicenseDto: CreateLicenseDto, user: IUser) {
 
     const { userEmail, product } = createLicenseDto

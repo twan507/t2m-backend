@@ -10,10 +10,16 @@ import { RolesModule } from './roles/roles.module';
 import { DatabasesModule } from './databases/databases.module';
 import { LicensesModule } from './licenses/licenses.module';
 import { ProductsModule } from './products/products.module';
+import { MailModule } from './mail/mail.module';
+import { FilesModule } from './files/files.module';
+import { ScheduleModule } from '@nestjs/schedule';
 require('dotenv').config()
 
 @Module({
-  imports: [UsersModule, AuthModule,
+  imports: [UsersModule, AuthModule, 
+    
+    ScheduleModule.forRoot(),
+
     MongooseModule.forRootAsync({
       useFactory: async () => ({
         uri: process.env.MONGODB_URL,
@@ -27,7 +33,9 @@ require('dotenv').config()
     RolesModule,
     DatabasesModule,
     LicensesModule,
-    ProductsModule
+    ProductsModule,
+    MailModule,
+    FilesModule
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -1,13 +1,22 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
 import { CreateLicenseDto } from './dto/create-License.dto';
 import { UpdateLicenseDto } from './dto/update-License.dto';
-import { ResponseMessage, User } from 'src/decorator/customize';
+import { Public, ResponseMessage, User } from 'src/decorator/customize';
 import { IUser } from 'src/users/users.interface';
 import { LicensesService } from './licenses.service';
+import { Cron, CronExpression } from '@nestjs/schedule';
 
 @Controller('licenses')
 export class LicensesController {
   constructor(private readonly licensesService: LicensesService) { }
+
+  @Post("update-licenses-days-left")
+  @Public()
+  @Cron(CronExpression.EVERY_DAY_AT_MIDNIGHT)
+  updateLincesesDaysLeft(){
+    console.log("check cron")
+    return this.licensesService.updateLincesesDaysLeft()
+  }
 
   @Post()
   create(@Body() createLicenseDto: CreateLicenseDto, @User() user: IUser) {

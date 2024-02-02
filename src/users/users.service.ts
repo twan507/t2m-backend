@@ -97,6 +97,7 @@ export class UsersService {
       password: hashPassword,
       name,
       phoneNumber,
+      license: "",
       affiliateCode: affiliateCode ? affiliateCode : "",
       sponsorCode: sponsorCode ? sponsorCode : "",
       role: roleId._id,
@@ -127,6 +128,7 @@ export class UsersService {
       password: hashPassword,
       name,
       phoneNumber,
+      license: "",
       affiliateCode: affiliateCode ? affiliateCode : "",
       sponsorCode: sponsorCode ? sponsorCode : "",
       role: userRole?._id

@@ -69,7 +69,8 @@ export class DatabasesService implements OnModuleInit {
                         name: "T2M ADMIN",
                         affiliateCode: "VIP000",
                         phoneNumber: "0123456789",
-                        role: adminRole?._id
+                        role: adminRole?._id,
+                        license:""
                     },
                     {
                         _id: "65bc7689a59dc544823ae394",
@@ -77,7 +78,8 @@ export class DatabasesService implements OnModuleInit {
                         password: this.userService.getHashPassword(process.env.INIT_PASSWORD),
                         name: "T2M USER",
                         phoneNumber: "0123456789",
-                        role: userRole?._id
+                        role: userRole?._id,
+                        license:""
                     },
                 ])
             }
