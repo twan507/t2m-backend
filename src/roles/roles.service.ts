@@ -18,7 +18,7 @@ export class RolesService {
 
   async create(createRoleDto: CreateRoleDto, user: IUser) {
 
-    const { name, isActive, permissions } = createRoleDto
+    const { name, permissions } = createRoleDto
     const isExist = await this.roleModel.findOne({ name })
 
     if (isExist) {
@@ -26,7 +26,7 @@ export class RolesService {
     }
 
     const newRole = await this.roleModel.create({
-      name, isActive, permissions,
+      name, isActive: true, permissions,
       createdBy: {
         _id: user._id,
         email: user.email
@@ -78,6 +78,12 @@ export class RolesService {
   }
 
   async update(id: string, updateRoleDto: UpdateRoleDto, user: IUser) {
+    const foundUser = await this.roleModel.findOne({ _id: id });
+    if (!foundUser) {
+      throw new BadRequestException("Không tìm thấy Role");
+    } else if (foundUser.name === "SUPER_ADMIN") {
+      throw new BadRequestException("Không thể chỉnh sửa role SUPER_ADMIN")
+    }
     return await this.roleModel.updateOne(
       { _id: id },
       {
@@ -91,9 +97,7 @@ export class RolesService {
   }
 
   async remove(id: string, user: IUser) {
-    // Kiểm tra xem người dùng có tồn tại
     const foundUser = await this.roleModel.findOne({ _id: id });
-    // Nếu không tìm thấy người dùng hoặc người dùng là admin
     if (!foundUser) {
       throw new BadRequestException("Không tìm thấy Role");
     } else if (foundUser.name in ["ADMIN", "USER"]) {

@@ -9,7 +9,6 @@ import { compareSync, genSaltSync, hashSync } from 'bcryptjs';
 import aqp from 'api-query-params';
 import { Role, RoleDocument } from 'src/roles/schemas/role.schemas';
 import { USER_ROLE } from 'src/databases/sample';
-import { Types } from 'mongoose';
 
 @Injectable()
 export class UsersService {
@@ -98,8 +97,8 @@ export class UsersService {
       password: hashPassword,
       name,
       phoneNumber,
-      affiliateCode: affiliateCode ? affiliateCode : null,
-      sponsorCode: sponsorCode ? sponsorCode : null,
+      affiliateCode: affiliateCode ? affiliateCode : "",
+      sponsorCode: sponsorCode ? sponsorCode : "",
       role: roleId._id,
       createdBy: {
         _id: user._id,
@@ -176,6 +175,12 @@ export class UsersService {
 
 
   async update(id: string, updateUserDto: UpdateUserDto, user: IUser) {
+    const foundUser = await this.userModel.findOne({ _id: id });
+    if (!foundUser) {
+      throw new BadRequestException("Không tìm thấy User")
+    } else if (foundUser.email === "admin@t2m.vn") {
+      throw new BadRequestException("Không thể chỉnh sửa tài khoản Admin")
+    }
     return await this.userModel.updateOne(
       { _id: id },
       {
@@ -189,12 +194,10 @@ export class UsersService {
   }
 
   async remove(id: string, user: IUser) {
-    // Kiểm tra xem người dùng có tồn tại và không phải là admin
     const foundUser = await this.userModel.findOne({ _id: id });
-    // Nếu không tìm thấy người dùng hoặc người dùng là admin
     if (!foundUser) {
       throw new BadRequestException("Không tìm thấy User")
-    } else if (foundUser.email === "admin@gmail.com") {
+    } else if (foundUser.email === "admin@t2m.vn") {
       throw new BadRequestException("Không thể xoá tài khoản Admin")
     }
     // Cập nhật thông tin người xóa

@@ -1,4 +1,4 @@
-import { IsEmail, IsMongoId, IsNotEmpty, IsString, Matches, MinLength } from "class-validator"
+import { IsEmail, IsMongoId, IsNotEmpty, IsOptional, IsString, Length, Matches, MinLength } from "class-validator"
 
 export class CreateUserDto {
 
@@ -17,12 +17,16 @@ export class CreateUserDto {
     name: string
 
     @IsNotEmpty({ message: "Số điện thoại không được để trống" })
+    @Length(10, 10, { message: "Số điện thoại không đúng định dạng" })
     phoneNumber: string
 
     @IsNotEmpty({ message: "Role không được để trống" })
     role: string
 
+    @IsOptional()
     affiliateCode: string
+
+    @IsOptional()
     sponsorCode: string
 }
 
@@ -50,12 +54,13 @@ export class RegisterUserDto {
     name: string
 
     @IsNotEmpty({ message: "Số điện thoại không được để trống" })
-    phoneNumber: string
+    @Length(10, 10, { message: "Số điện thoại không đúng định dạng" })
+    phoneNumber: string;
 
-    @IsNotEmpty({ message: "Role không được để trống" })
-    role: string
-
+    @IsOptional()
     affiliateCode: string
+
+    @IsOptional()
     sponsorCode: string
 }
 

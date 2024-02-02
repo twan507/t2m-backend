@@ -44,11 +44,13 @@ export class DatabasesService implements OnModuleInit {
                 const permissions = await this.permissionModel.find({}).select("_id");
                 await this.roleModel.insertMany([
                     {
+                        _id: "65bc7689a2be17285bf42c81",
                         name: ADMIN_ROLE,
                         isActive: true,
                         permissions: permissions
                     },
                     {
+                        _id: "65bc76898f73921d2363a9eb",
                         name: USER_ROLE,
                         isActive: true,
                         permissions: [] //không set quyền, chỉ cần add ROLE
@@ -61,6 +63,7 @@ export class DatabasesService implements OnModuleInit {
                 const userRole = await this.roleModel.findOne({ name: USER_ROLE })
                 await this.userModel.insertMany([
                     {
+                        _id: "65bc76897e9d32d76d997a48",
                         email: "admin@t2m.vn",
                         password: this.userService.getHashPassword(process.env.INIT_PASSWORD),
                         name: "T2M ADMIN",
@@ -69,6 +72,7 @@ export class DatabasesService implements OnModuleInit {
                         role: adminRole?._id
                     },
                     {
+                        _id: "65bc7689a59dc544823ae394",
                         email: "user@t2m.vn",
                         password: this.userService.getHashPassword(process.env.INIT_PASSWORD),
                         name: "T2M USER",
