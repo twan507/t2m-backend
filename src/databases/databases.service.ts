@@ -36,7 +36,6 @@ export class DatabasesService implements OnModuleInit {
             //create permissions
             if (countPermission === 0) {
                 await this.permissionModel.insertMany(INIT_PERMISSIONS);
-                //bulk create
             }
 
             // create role
@@ -58,6 +57,7 @@ export class DatabasesService implements OnModuleInit {
                 ]);
             }
 
+            // create users
             if (countUser === 0) {
                 const adminRole = await this.roleModel.findOne({ name: ADMIN_ROLE });
                 const userRole = await this.roleModel.findOne({ name: USER_ROLE })
@@ -69,8 +69,8 @@ export class DatabasesService implements OnModuleInit {
                         name: "T2M ADMIN",
                         affiliateCode: "VIP000",
                         phoneNumber: "0123456789",
-                        role: adminRole?._id,
-                        license:""
+                        role: adminRole?.name,
+                        license: ""
                     },
                     {
                         _id: "65bc7689a59dc544823ae394",
@@ -78,8 +78,8 @@ export class DatabasesService implements OnModuleInit {
                         password: this.userService.getHashPassword(process.env.INIT_PASSWORD),
                         name: "T2M USER",
                         phoneNumber: "0123456789",
-                        role: userRole?._id,
-                        license:""
+                        role: userRole?.name,
+                        license: ""
                     },
                 ])
             }

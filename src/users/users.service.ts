@@ -32,13 +32,12 @@ export class UsersService {
   }
 
   findOneByUsername(username: string) {
-    return this.userModel.findOne({
-      email: username
-    }).populate({ path: "role", select: { name: 1 } })
+    return this.userModel.findOne({ email: username })
+      // .populate({ path: "role", select: { name: 1 } })
   }
 
   async adminChangePassword(adminChangePasswordDto: AdminChangePasswordDto, user: IUser) {
-    const {email, newPassword, confirmPassword } = adminChangePasswordDto
+    const { email, newPassword, confirmPassword } = adminChangePasswordDto
 
     const isExist = await this.userModel.findOne({ email })
     if (!isExist) {
@@ -100,7 +99,7 @@ export class UsersService {
       license: "",
       affiliateCode: affiliateCode ? affiliateCode : "",
       sponsorCode: sponsorCode ? sponsorCode : "",
-      role: roleId._id,
+      role: roleId.name,
       createdBy: {
         _id: user._id,
         email: user.email
@@ -131,7 +130,7 @@ export class UsersService {
       license: "",
       affiliateCode: affiliateCode ? affiliateCode : "",
       sponsorCode: sponsorCode ? sponsorCode : "",
-      role: userRole?._id
+      role: userRole?.name
     })
     return newRegister
   }

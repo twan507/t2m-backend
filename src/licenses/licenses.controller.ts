@@ -12,7 +12,7 @@ export class LicensesController {
 
   @Post("update-licenses-days-left")
   @Public()
-  @Cron(CronExpression.EVERY_DAY_AT_MIDNIGHT)
+  @Cron(CronExpression.EVERY_DAY_AT_11PM)
   updateLincesesDaysLeft(){
     console.log("check cron")
     return this.licensesService.updateLincesesDaysLeft()

@@ -11,13 +11,12 @@ import { DatabasesModule } from './databases/databases.module';
 import { LicensesModule } from './licenses/licenses.module';
 import { ProductsModule } from './products/products.module';
 import { MailModule } from './mail/mail.module';
-import { FilesModule } from './files/files.module';
 import { ScheduleModule } from '@nestjs/schedule';
 require('dotenv').config()
 
 @Module({
   imports: [UsersModule, AuthModule, 
-    
+
     ScheduleModule.forRoot(),
 
     MongooseModule.forRootAsync({
@@ -35,7 +34,6 @@ require('dotenv').config()
     LicensesModule,
     ProductsModule,
     MailModule,
-    FilesModule
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -29,8 +29,8 @@ export class User {
     @Prop({ type: Types.ObjectId, ref: License.name})
     license: Types.ObjectId;
 
-    @Prop({ type: Types.ObjectId, ref: Role.name })
-    role: Types.ObjectId;
+    @Prop({ type: String, ref: Role.name })
+    role: string;
 
     @Prop({ type: Object })
     createdBy: {

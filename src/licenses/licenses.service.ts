@@ -53,6 +53,7 @@ export class LicensesService {
     const { userEmail, product } = createLicenseDto
     const foundProduct = await this.productsService.findProductByName(product)
     const foundUser = await this.usersService.findOneByUsername(userEmail)
+
     if (foundUser) {
       if (foundUser.license) {
         throw new BadRequestException(`User ${userEmail} đang có một license đã được kích hoạt`)
@@ -60,6 +61,7 @@ export class LicensesService {
     } else {
       throw new BadRequestException(`Không tìm thấy người dùng ${userEmail}`)
     }
+
     // Tính toán lưu lại các ngày hiệu lực
     const startDate = new Date();
     const endDate = new Date(new Date().setMonth(new Date().getMonth() + foundProduct.monthsDuration))
