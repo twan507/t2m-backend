@@ -12,5 +12,6 @@ export interface IUser {
         apiPath: string
         module: string
     } []
+    license: string
     tokens: string[]
 }

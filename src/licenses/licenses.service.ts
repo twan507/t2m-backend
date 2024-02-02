@@ -18,9 +18,6 @@ export class LicensesService {
     @InjectModel(License.name)
     private licenseModel: SoftDeleteModel<LicenseDocument>,
 
-    @InjectModel(Role.name)
-    private roleModel: SoftDeleteModel<RoleDocument>,
-
     @InjectModel(User.name)
     private userModel: SoftDeleteModel<UserDocument>,
 

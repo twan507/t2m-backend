@@ -1,5 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument, Types } from 'mongoose';
+import { Permission } from 'src/permissions/schemas/permission.schemas';
 import { Product } from 'src/products/schemas/Product.schemas';
 
 export type LicenseDocument = HydratedDocument<License>;
@@ -25,8 +26,8 @@ export class License {
     @Prop({ type: Object, ref: Product.name })
     product: Product
 
-    @Prop({ type: [Types.ObjectId] })
-    permissions: Types.ObjectId[];
+    @Prop({ type: [Types.ObjectId], ref: Permission.name })
+    permissions: Permission[];
 
     @Prop()
     isActive: string;

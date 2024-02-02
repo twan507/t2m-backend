@@ -2,10 +2,11 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { UsersService } from 'src/users/users.service';
 import { JwtService } from '@nestjs/jwt';
 import { IUser } from 'src/users/users.interface';
-import { CreateUserDto, RegisterUserDto } from 'src/users/dto/create-user.dto';
+import { RegisterUserDto } from 'src/users/dto/create-user.dto';
 import { Response } from 'express';
-import ms from 'ms';
 import { RolesService } from 'src/roles/roles.service';
+import { LicensesService } from 'src/licenses/licenses.service';
+import ms from 'ms';
 
 
 @Injectable()
@@ -14,6 +15,7 @@ export class AuthService {
         private usersService: UsersService,
         private jwtService: JwtService,
         private rolesService: RolesService,
+        private licensesService: LicensesService
     ) { }
 
     createRefreshToken = (payload) => {
@@ -31,12 +33,19 @@ export class AuthService {
             const isValid = this.usersService.isValidPassword(pass, user.password)
             if (isValid === true) {
 
-                const userRole = user.role as unknown as {_id: string, name: string}
-                const temp = await this.rolesService.findOne(userRole._id)
+                const userRole = user.role as unknown as { _id: string, name: string }
+                const tempRole = userRole ? await this.rolesService.findOne(userRole._id) : { permissions: [] }
+
+                const userLicense = user.license as any
+                const tempLicense = userLicense ? await this.licensesService.findOne(userLicense) : { permissions: [] }
+
+                const licensePermissions = tempLicense.permissions
+                const rolePermissions = tempRole.permissions
+                const userPermissions = [...new Set([...licensePermissions, ...rolePermissions])]
 
                 const objUser = {
                     ...user.toObject(),
-                    permissions: temp?.permissions ?? []
+                    permissions: userPermissions
                 }
 
                 return objUser
@@ -106,7 +115,7 @@ export class AuthService {
                 const { _id, name, email, role } = user;
 
                 //festch user role vì hàm findUserByToken sẽ không trả về permission đính kèm
-                const userRole = role as unknown as {_id: string, name: string}
+                const userRole = role as unknown as { _id: string, name: string }
                 const temp = await this.rolesService.findOne(userRole._id) as any
 
                 const payload = {

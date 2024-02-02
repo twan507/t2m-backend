@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { LicensesService } from './licenses.service';
 import { LicensesController } from './licenses.controller';
 import { MongooseModule } from '@nestjs/mongoose';
-import { License, LicenseSchema } from './schemas/License.schemas';
+import { License, LicenseSchema } from './schemas/license.schemas';
 import { Product, ProductSchema } from 'src/products/schemas/product.schemas';
 import { User, UserSchema } from 'src/users/schemas/user.schemas';
 import { ProductsService } from 'src/products/products.service';
@@ -17,6 +17,7 @@ import { Role, RoleSchema } from 'src/roles/schemas/role.schemas';
     { name: Role.name, schema: RoleSchema },
   ])],
   controllers: [LicensesController],
-  providers: [LicensesService, ProductsService, UsersService]
+  providers: [LicensesService, ProductsService, UsersService],
+  exports: [LicensesService]
 })
 export class LicensesModule {}
