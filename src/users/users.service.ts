@@ -1,5 +1,5 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { AdminChangePasswordDto, ChangePasswordDto, CreateUserDto, RegisterUserDto } from './dto/create-user.dto';
+import { AdminChangePasswordDto, ChangePasswordDto, CreateUserDto, RegisterUserDto, forgetPasswordDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { User, UserDocument } from './schemas/user.schemas';
@@ -33,7 +33,7 @@ export class UsersService {
 
   findOneByUsername(username: string) {
     return this.userModel.findOne({ email: username })
-      // .populate({ path: "role", select: { name: 1 } })
+    // .populate({ path: "role", select: { name: 1 } })
   }
 
   async adminChangePassword(adminChangePasswordDto: AdminChangePasswordDto, user: IUser) {
@@ -256,5 +256,28 @@ export class UsersService {
         select: { name: 1 }
       })
     return user;
+  }
+
+  async forgetPassword(forgetPasswordDto: forgetPasswordDto) {
+    const { email, phoneNumber, newPassword, confirmPassword } = forgetPasswordDto
+    const foundUser = await this.userModel.findOne({ email: email })
+
+    if (email === foundUser.email && phoneNumber === foundUser.phoneNumber) {
+      if (newPassword === confirmPassword) {
+        await this.userModel.updateOne(
+          { email: email },
+          {
+            password: this.getHashPassword(newPassword),
+            updatedBy: {
+              _id: foundUser._id,
+              email: foundUser.email
+            }
+          });
+      } else {
+        throw new BadRequestException("Mật khẩu xác nhận không trùng khớp")
+      }
+    } else {
+      throw new BadRequestException("Email hoặc Số điện thoại không đúng")
+    }
   }
 }

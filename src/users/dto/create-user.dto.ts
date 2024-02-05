@@ -108,3 +108,28 @@ export class AdminChangePasswordDto {
     @Matches(/(?=.*[0-9])/, { message: 'Password phải bao gồm một chữ số' })
     confirmPassword: string;
 }
+
+export class forgetPasswordDto {
+
+    @IsEmail({}, { message: "Email không đúng định dạng" })
+    @IsNotEmpty({ message: "Email không được để trống" })
+    email: string
+
+    @IsNotEmpty({ message: "Số điện thoại không được để trống" })
+    @Length(10, 10, { message: "Số điện thoại không đúng định dạng" })
+    phoneNumber: string
+
+    @IsString()
+    @IsNotEmpty({ message: "Pasword không được để trống" })
+    @MinLength(6, { message: 'Password quá ngắn, tối thiểu cần 6 kí tự' })
+    @Matches(/(?=.*[A-Z])/, { message: 'Password phải bao gồm một chữ cái in hoa' })
+    @Matches(/(?=.*[0-9])/, { message: 'Password phải bao gồm một chữ số' })
+    newPassword: string;
+
+    @IsString()
+    @IsNotEmpty({ message: "Pasword không được để trống" })
+    @MinLength(6, { message: 'Password quá ngắn, tối thiểu cần 6 kí tự' })
+    @Matches(/(?=.*[A-Z])/, { message: 'Password phải bao gồm một chữ cái in hoa' })
+    @Matches(/(?=.*[0-9])/, { message: 'Password phải bao gồm một chữ số' })
+    confirmPassword: string;
+}

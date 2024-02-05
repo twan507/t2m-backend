@@ -18,15 +18,15 @@ export class MailController {
 
   async handleTestEmail() {
     await this.mailerService.sendMail({
-      to: "2ez4aw@gmail.com",
-      from: '"Support Team" <support@example.com>', // override default from
-      subject: 'Welcome to Nice App! Confirm your Email',
-      template: "test", //Tên của file .hbs trong thư mục templates
+      to: "tuan98.ab@gmail.com",
+      from: '"T2M Invest" <mail.t2minvest@gmail.com>', // override default from
+      subject: 'Đăng kí thành công tài khoản T2M Invest!',
+      template: "registerUser", //Tên của file .hbs trong thư mục templates
 
       //truyền các biến này sang file handlebar
       context: {
 
-      }
+      },
     });
   }
 }
