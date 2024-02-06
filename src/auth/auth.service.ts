@@ -32,9 +32,8 @@ export class AuthService {
         if (user) {
             const isValid = this.usersService.isValidPassword(pass, user.password)
             if (isValid === true) {
-
-                const userRole = user.role as unknown as { _id: string, name: string }
-                const tempRole = userRole ? await this.rolesService.findOne(userRole._id) : { permissions: [] }
+                const userRole = user.role
+                const tempRole = userRole ? await this.rolesService.findRoleByName(userRole) : { permissions: [] }
 
                 const userLicense = user.license as any
                 const tempLicense = userLicense ? await this.licensesService.findOne(userLicense) : { permissions: [] }
@@ -57,6 +56,7 @@ export class AuthService {
     async login(user: IUser, response: Response) {
 
         const { _id, name, email, role, tokens, permissions } = user;
+
         const payload = {
             sub: "token login",
             iss: "from server",
@@ -115,8 +115,8 @@ export class AuthService {
                 const { _id, name, email, role } = user;
 
                 //festch user role vì hàm findUserByToken sẽ không trả về permission đính kèm
-                const userRole = role as unknown as { _id: string, name: string }
-                const temp = await this.rolesService.findOne(userRole._id) as any
+                const userRole = role
+                const temp = await this.rolesService.findOne(userRole) as any
 
                 const payload = {
                     sub: "token refresh",

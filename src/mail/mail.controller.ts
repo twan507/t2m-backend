@@ -11,23 +11,25 @@ export class MailController {
     private readonly mailerService: MailerService,
   ) { }
 
-  @Get()
+  @Get('register')
   @Public()
-  // @Cron(CronExpression.EVERY_5_SECONDS)
-  @ResponseMessage("Test email")
+  @ResponseMessage("Register Email")
+  async registerEmail() {}
 
-  async handleTestEmail() {
-    await this.mailerService.sendMail({
-      to: "tuan98.ab@gmail.com",
-      from: '"T2M Invest" <mail.t2minvest@gmail.com>', // override default from
-      subject: 'Đăng kí thành công tài khoản T2M Invest!',
-      template: "registerUser", //Tên của file .hbs trong thư mục templates
+  @Get('license-expire')
+  @Public()
+  @ResponseMessage("License Expire Email")
+  async licenseExpireEmail() {}
 
-      //truyền các biến này sang file handlebar
-      context: {
+  @Get('forget-password')
+  @Public()
+  @ResponseMessage("Forget Password Email")
+  async forgetPasswordEmail() {}
+  
+  @Get('change-password')
+  @Public()
+  @ResponseMessage("Change Password Email")
+  async changePasswordEmail() {}
 
-      },
-    });
-  }
 }
 

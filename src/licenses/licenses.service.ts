@@ -10,6 +10,7 @@ import { ProductsService } from 'src/products/products.service';
 import { Role, RoleDocument } from 'src/roles/schemas/role.schemas';
 import { UsersService } from 'src/users/users.service';
 import { User, UserDocument } from 'src/users/schemas/user.schemas';
+import { MailService } from 'src/mail/mail.service';
 
 @Injectable()
 export class LicensesService {
@@ -23,13 +24,14 @@ export class LicensesService {
 
     private productsService: ProductsService,
     private usersService: UsersService,
-  ) { }
+    private readonly mailService: MailService
+    ) { }
 
 
   async updateLincesesDaysLeft() {
     const allLincenses = await this.licenseModel.find()
     for (const lincense of allLincenses) {
-      const daysLeft = (lincense.endDate.getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24)
+      const daysLeft = Math.ceil((lincense.endDate.getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24))
       if (daysLeft > 0) {
         await this.licenseModel.updateOne(
           { _id: lincense._id },
@@ -44,6 +46,12 @@ export class LicensesService {
           { email: lincense.userEmail },
           { license: "" }
         )
+      }
+
+      //Gửi email thông báo tài khoản sắp hết hạn
+      if (daysLeft <= 7 && daysLeft > 0) {
+        const customer = await this.usersService.findOneByUsername(lincense.userEmail)
+        await this.mailService.licenseExpireEmail(customer.name, daysLeft, customer.email)
       }
     }
   }

@@ -109,15 +109,11 @@ export class AdminChangePasswordDto {
     confirmPassword: string;
 }
 
-export class forgetPasswordDto {
+export class ForgetPasswordDto {
 
     @IsEmail({}, { message: "Email không đúng định dạng" })
     @IsNotEmpty({ message: "Email không được để trống" })
     email: string
-
-    @IsNotEmpty({ message: "Số điện thoại không được để trống" })
-    @Length(10, 10, { message: "Số điện thoại không đúng định dạng" })
-    phoneNumber: string
 
     @IsString()
     @IsNotEmpty({ message: "Pasword không được để trống" })
@@ -132,4 +128,14 @@ export class forgetPasswordDto {
     @Matches(/(?=.*[A-Z])/, { message: 'Password phải bao gồm một chữ cái in hoa' })
     @Matches(/(?=.*[0-9])/, { message: 'Password phải bao gồm một chữ số' })
     confirmPassword: string;
+
+    @IsNotEmpty({ message: "Mã xác thực không được để trống" })
+    token: string
+}
+
+export class SendPasswordTokenDto {
+
+    @IsEmail({}, { message: "Email không đúng định dạng" })
+    @IsNotEmpty({ message: "Email không được để trống" })
+    email: string
 }

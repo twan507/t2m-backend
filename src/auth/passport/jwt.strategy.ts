@@ -28,8 +28,8 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   async validate(payload: IUser) {
     const { _id, name, email, role, license } = payload;
 
-    const userRole = role as unknown as { _id: string, name: string }
-    const tempRole = userRole ? await this.rolesService.findOne(userRole._id) : { permissions: [] }
+    const userRole = role
+    const tempRole = userRole ? await this.rolesService.findRoleByName(userRole) : { permissions: [] }
 
     const userLicense = license as any
     const tempLicense = userLicense ? await this.licensesService.findOne(userLicense) : { permissions: [] }

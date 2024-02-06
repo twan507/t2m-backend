@@ -36,7 +36,7 @@ export class AuthController {
     @Get('/account')
     async handleGetAccount(@User() user: IUser) {
         //Query xuống DB để lấy permissions từ user đã được đăng kí
-        const temp = await this.roleService.findOne(user.role._id) as any
+        const temp = await this.roleService.findOne(user.role) as any
         user.permissions = temp.permissions
         return { user }
     }

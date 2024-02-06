@@ -64,6 +64,12 @@ export class User {
 
     @Prop()
     tokens: string[]
+
+    @Prop({ type: Object })
+    getPasswordToken: {
+        token: string
+        expiresAt: Date
+    }
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

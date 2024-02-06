@@ -1,6 +1,6 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { AdminChangePasswordDto, ChangePasswordDto, CreateUserDto, forgetPasswordDto } from './dto/create-user.dto';
+import { AdminChangePasswordDto, ChangePasswordDto, CreateUserDto, ForgetPasswordDto, SendPasswordTokenDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { Public, ResponseMessage, User } from 'src/decorator/customize';
 import { IUser } from './users.interface';
@@ -34,11 +34,17 @@ export class UsersController {
   @Public()
   @ResponseMessage("Đổi mật khẩu thành công")
   forgetPassword(
-    @Body() forgetPasswordDto: forgetPasswordDto,
+    @Body() forgetPasswordDto: ForgetPasswordDto,
   ) {
     return this.usersService.forgetPassword(forgetPasswordDto)
   }
 
+  @Post('send-password-token')
+  @Public()
+  @ResponseMessage("Gửi mã thành công")
+  sendPasswordToken(@Body() sendPasswordTokenDto: SendPasswordTokenDto) {
+    return this.usersService.sendPasswordToken(sendPasswordTokenDto)
+  }
 
   @Post('admin-change-password')
   adminChangePassword(

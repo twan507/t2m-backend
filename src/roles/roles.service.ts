@@ -6,13 +6,14 @@ import { Role, RoleDocument } from './schemas/role.schemas';
 import { SoftDeleteModel } from 'soft-delete-plugin-mongoose';
 import { IUser } from 'src/users/users.interface';
 import aqp from 'api-query-params';
+import { MailService } from 'src/mail/mail.service';
 
 @Injectable()
 export class RolesService {
 
   constructor(
     @InjectModel(Role.name)
-    private roleModel: SoftDeleteModel<RoleDocument>
+    private roleModel: SoftDeleteModel<RoleDocument>,
   ) { }
 
 
@@ -73,6 +74,16 @@ export class RolesService {
       throw new BadRequestException("Không tìm thấy Role");
     }
     return this.roleModel.findOne({ _id: id })
+      // Hiển thị các thông tin ở bên module permissions, số 1 tức là hiển thị trường này
+      .populate({ path: "permissions", select: { _id: 1, apiPath: 1, name: 1, method: 1, module: 1 } })
+  }
+
+  async findRoleByName(name: string) {
+    const role = await this.roleModel.findOne({ name: name })
+    if (!role) {
+      throw new BadRequestException("Không tìm thấy Role");
+    }
+    return this.roleModel.findOne({ name: name })
       // Hiển thị các thông tin ở bên module permissions, số 1 tức là hiển thị trường này
       .populate({ path: "permissions", select: { _id: 1, apiPath: 1, name: 1, method: 1, module: 1 } })
   }

@@ -1,5 +1,5 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { AdminChangePasswordDto, ChangePasswordDto, CreateUserDto, RegisterUserDto, forgetPasswordDto } from './dto/create-user.dto';
+import { AdminChangePasswordDto, ChangePasswordDto, CreateUserDto, ForgetPasswordDto, RegisterUserDto, SendPasswordTokenDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { User, UserDocument } from './schemas/user.schemas';
@@ -9,6 +9,7 @@ import { compareSync, genSaltSync, hashSync } from 'bcryptjs';
 import aqp from 'api-query-params';
 import { Role, RoleDocument } from 'src/roles/schemas/role.schemas';
 import { USER_ROLE } from 'src/databases/sample';
+import { MailService } from 'src/mail/mail.service';
 
 @Injectable()
 export class UsersService {
@@ -18,7 +19,9 @@ export class UsersService {
     private userModel: SoftDeleteModel<UserDocument>,
 
     @InjectModel(Role.name)
-    private roleModel: SoftDeleteModel<RoleDocument>
+    private roleModel: SoftDeleteModel<RoleDocument>,
+
+    private readonly mailService: MailService
   ) { }
 
   getHashPassword = (password: string) => {
@@ -72,7 +75,9 @@ export class UsersService {
               email: user.email,
             },
           }
-        );
+        )
+
+        await this.mailService.changePasswordEmail(foundUser.name, foundUser.email)
       } else {
         throw new BadRequestException("Sai mật khẩu")
       }
@@ -132,6 +137,10 @@ export class UsersService {
       sponsorCode: sponsorCode ? sponsorCode : "",
       role: userRole?.name
     })
+
+    //Gửi email xác nhận cho khách
+    await this.mailService.registerEmail(name, email)
+
     return newRegister
   }
 
@@ -258,26 +267,55 @@ export class UsersService {
     return user;
   }
 
-  async forgetPassword(forgetPasswordDto: forgetPasswordDto) {
-    const { email, phoneNumber, newPassword, confirmPassword } = forgetPasswordDto
+  async forgetPassword(forgetPasswordDto: ForgetPasswordDto) {
+    const { email, token, newPassword, confirmPassword } = forgetPasswordDto
+
     const foundUser = await this.userModel.findOne({ email: email })
 
-    if (email === foundUser.email && phoneNumber === foundUser.phoneNumber) {
-      if (newPassword === confirmPassword) {
-        await this.userModel.updateOne(
-          { email: email },
-          {
-            password: this.getHashPassword(newPassword),
-            updatedBy: {
-              _id: foundUser._id,
-              email: foundUser.email
-            }
-          });
-      } else {
-        throw new BadRequestException("Mật khẩu xác nhận không trùng khớp")
+    if (email === foundUser.email) {
+      const now = new Date()
+      if (token === foundUser.getPasswordToken.token && foundUser.getPasswordToken.expiresAt > now) {
+        if (newPassword === confirmPassword) {
+          await this.userModel.updateOne(
+            { email: email },
+            {
+              password: this.getHashPassword(newPassword),
+              updatedBy: {
+                _id: foundUser._id,
+                email: foundUser.email
+              }
+            })
+            await this.mailService.changePasswordEmail(foundUser.name, foundUser.email)
+        } else {
+          throw new BadRequestException("Mật khẩu xác nhận không trùng khớp")
+        }
+      } else if (token !== foundUser.getPasswordToken.token && foundUser.getPasswordToken.expiresAt > now) {
+        throw new BadRequestException("Mã xác thực không đúng")
+      } else if (token === foundUser.getPasswordToken.token && foundUser.getPasswordToken.expiresAt <= now) {
+        throw new BadRequestException("Mã xác thực đã hết hạn")
       }
     } else {
       throw new BadRequestException("Email hoặc Số điện thoại không đúng")
+    }
+  }
+
+  async sendPasswordToken(sendPasswordTokenDto: SendPasswordTokenDto) {
+    const token = Math.floor(Math.random() * 1000000).toString().padStart(6, '0');
+    const expiresAt = new Date(new Date().getTime() + 60000);
+    const customerName = (await (this.userModel.findOne({ email: sendPasswordTokenDto.email }))).name
+    if (customerName) {
+      await this.userModel.updateOne(
+        { email: sendPasswordTokenDto.email },
+        {
+          getPasswordToken: {
+            token,
+            expiresAt
+          }
+        }
+      )
+      await this.mailService.forgetPasswordEmail(customerName, token, sendPasswordTokenDto.email)
+    } else {
+      throw new BadRequestException("Không tìm thấy người dùng")
     }
   }
 }

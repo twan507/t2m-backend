@@ -3,6 +3,7 @@ import { RolesService } from './roles.service';
 import { RolesController } from './roles.controller';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Role, RoleSchema } from './schemas/role.schemas';
+import { MailService } from 'src/mail/mail.service';
 
 @Module({
   imports: [MongooseModule.forFeature([{ name: Role.name, schema: RoleSchema }])],
