@@ -12,10 +12,6 @@ export class HttpExceptionFilter implements ExceptionFilter {
     response
       .status(status)
       .json({
-        // statusCode: status,
-        // timestamp: new Date().toISOString(),
-        // path: request.url,
-
         error: "File không đúng định dạng hoặc quá lớn",
         message: "File không đúng định dạng hoặc quá lớn",
         statusCode: status

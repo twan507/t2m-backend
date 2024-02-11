@@ -1,10 +1,11 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, UseInterceptors, UploadedFile } from '@nestjs/common';
 import { CreateLicenseDto } from './dto/create-License.dto';
 import { UpdateLicenseDto } from './dto/update-License.dto';
 import { Public, ResponseMessage, User } from 'src/decorator/customize';
 import { IUser } from 'src/users/users.interface';
 import { LicensesService } from './licenses.service';
 import { Cron, CronExpression } from '@nestjs/schedule';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller('licenses')
 export class LicensesController {
@@ -14,13 +15,19 @@ export class LicensesController {
   @Public()
   @ResponseMessage("Update license date")
   @Cron(CronExpression.EVERY_DAY_AT_11PM)
-  updateLincesesDaysLeft(){
+  updateLincesesDaysLeft() {
     return this.licensesService.updateLincesesDaysLeft()
   }
 
   @Post()
-  create(@Body() createLicenseDto: CreateLicenseDto, @User() user: IUser) {
-    return this.licensesService.create(createLicenseDto, user);
+  @UseInterceptors(FileInterceptor('imageConfirm'))
+  create(
+    @Body() createLicenseDto: CreateLicenseDto,
+    @User() user: IUser,
+    @UploadedFile() file: Express.Multer.File
+  ) {
+    console.log(file)
+    return this.licensesService.create(createLicenseDto, user, file);
   }
 
   @Get()

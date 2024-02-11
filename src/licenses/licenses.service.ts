@@ -7,7 +7,6 @@ import { SoftDeleteModel } from 'soft-delete-plugin-mongoose';
 import { IUser } from 'src/users/users.interface';
 import aqp from 'api-query-params';
 import { ProductsService } from 'src/products/products.service';
-import { Role, RoleDocument } from 'src/roles/schemas/role.schemas';
 import { UsersService } from 'src/users/users.service';
 import { User, UserDocument } from 'src/users/schemas/user.schemas';
 import { MailService } from 'src/mail/mail.service';
@@ -24,7 +23,7 @@ export class LicensesService {
 
     private productsService: ProductsService,
     private usersService: UsersService,
-    private readonly mailService: MailService
+    private mailService: MailService,
     ) { }
 
 
@@ -56,7 +55,11 @@ export class LicensesService {
     }
   }
 
-  async create(createLicenseDto: CreateLicenseDto, user: IUser) {
+  async create(createLicenseDto: CreateLicenseDto, user: IUser, file: Express.Multer.File) {
+
+    if (!file) {
+      throw new BadRequestException(`Hình ảnh xasc mình chưa đsung hoặc bị thiếu`)
+    }
 
     const { userEmail, product } = createLicenseDto
     const foundProduct = await this.productsService.findProductByName(product)
@@ -83,6 +86,7 @@ export class LicensesService {
       product: foundProduct.name,
       permissions: foundProduct.permissions,
       isActive: true,
+      imageConfirm: file.buffer,
       createdBy: {
         _id: user._id,
         email: user.email

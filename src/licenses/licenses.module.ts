@@ -9,15 +9,21 @@ import { ProductsService } from 'src/products/products.service';
 import { UsersService } from 'src/users/users.service';
 import { Role, RoleSchema } from 'src/roles/schemas/role.schemas';
 import { MailService } from 'src/mail/mail.service';
-import { MailModule } from 'src/mail/mail.module';
+import { MulterModule } from '@nestjs/platform-express';
+import { MulterConfigService } from './multer.config';
 
 @Module({
-  imports: [MongooseModule.forFeature([
+  imports: [
+    MongooseModule.forFeature([
       { name: License.name, schema: LicenseSchema },
       { name: Product.name, schema: ProductSchema },
       { name: User.name, schema: UserSchema },
       { name: Role.name, schema: RoleSchema },
-    ])],
+    ]),
+    MulterModule.registerAsync({
+      useClass: MulterConfigService,
+    })
+  ],
   controllers: [LicensesController],
   providers: [LicensesService, ProductsService, UsersService, MailService],
   exports: [LicensesService]

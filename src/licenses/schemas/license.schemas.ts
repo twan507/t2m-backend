@@ -21,7 +21,7 @@ export class License {
     userEmail: string;
 
     @Prop()
-    imageProof: string;
+    imageConfirm: Buffer;
 
     @Prop({ type: Object, ref: Product.name })
     product: Product
