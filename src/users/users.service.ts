@@ -176,7 +176,6 @@ export class UsersService {
     const user = await this.userModel
       .findOne({ _id: id })
       .select("-password -tokens") // Loại bỏ password và tokens khỏi kết quả trả về
-      .populate({ path: "role", select: { name: 1, _id: 1 } });
     if (!user) {
       throw new BadRequestException("Không tìm thấy User");
     }

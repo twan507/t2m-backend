@@ -26,10 +26,10 @@ export class User {
     @Prop()
     sponsorCode: string;
 
-    @Prop({ type: Types.ObjectId, ref: License.name})
+    @Prop()
     license: Types.ObjectId;
 
-    @Prop({ type: String, ref: Role.name })
+    @Prop()
     role: string;
 
     @Prop({ type: Object })
