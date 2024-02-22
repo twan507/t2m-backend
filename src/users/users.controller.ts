@@ -55,7 +55,6 @@ export class UsersController {
   }
 
   @Get()
-  @Public()
   @ResponseMessage("Fetch list user with paginate")
   findAll(
     @Query("current") currentPage: string,
