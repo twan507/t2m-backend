@@ -53,17 +53,13 @@ export class AuthService {
         return null;
     }
 
-    async login(user: IUser, response: Response) {
+    async login(user: IUser) {
 
-        const { _id, name, email, role, tokens, permissions } = user;
+        const { _id, name, email, role, tokens } = user;
 
         const payload = {
-            sub: "token login",
-            iss: "from server",
-            _id,
-            name,
-            email,
-            role
+            sub: "token login", iss: "from server",
+            _id, name, email, role
         };
 
         const refresh_token = this.createRefreshToken(payload)
@@ -71,27 +67,15 @@ export class AuthService {
         //update refresh token vào trong DB
         await this.usersService.updateUserToken(refresh_token, _id)
 
-        //set refresh token vào cookies
-        response.cookie('refresh_token', refresh_token, {
-            httpOnly: true,
-            maxAge: ms(process.env.JWT_REFRESH_EXPIRE)
-        })
-
         //logic check số lượng đăng nhập
-        const MAX_DEVICES = 2;
-        if (tokens.length >= MAX_DEVICES) {
+        const devices_number = process.env.MAX_DEVICES as unknown as number
+        if (tokens.length >= devices_number) {
             this.usersService.updateTokensArray(_id);
         }
 
         return {
             access_token: this.jwtService.sign(payload),
-            user: {
-                _id,
-                name,
-                email,
-                role,
-                permissions
-            }
+            user: { _id, name, email, role }
         };
     }
 
@@ -103,62 +87,23 @@ export class AuthService {
         }
     }
 
-    processNewToken = async (refreshToken: string, response: Response) => {
-        try {
-            this.jwtService.verify(refreshToken, {
-                secret: process.env.JWT_REFRESH_SECRET
-            })
-            let user = await this.usersService.findUserByToken(refreshToken)
-
-            if (user) {
-
-                const { _id, name, email, role } = user;
-
-                //festch user role vì hàm findUserByToken sẽ không trả về permission đính kèm
-                const userRole = role
-                const temp = await this.rolesService.findOne(userRole) as any
-
-                const payload = {
-                    sub: "token refresh",
-                    iss: "from server",
-                    _id,
-                    name,
-                    email,
-                    role
-                };
-
-                const newRefreshToken = this.createRefreshToken(payload)
-
-                //update refresh token vào trong DB
-                await this.usersService.refreshTokensArray(_id.toString(), refreshToken, newRefreshToken);
-
-                //xoá refresh token cũ và set refresh token mới vào cookies
-                response.clearCookie("refresh_token")
-                response.cookie('refresh_token', newRefreshToken, {
-                    httpOnly: true,
-                    maxAge: ms(process.env.JWT_REFRESH_EXPIRE)
-                })
-
-                return {
-                    access_token: this.jwtService.sign(payload),
-                    user: {
-                        _id,
-                        name,
-                        email,
-                        role,
-                        permissions: temp?.permissions ?? []
-                    }
-                };
-            }
-
-        } catch (error) {
-            throw new UnauthorizedException("Refresh token không hợp lệ. Vui lòng login");
-        }
-    }
-
     async logout(response: Response, user: IUser, refreshToken: string) {
         await this.usersService.logoutUser(user._id, refreshToken);
         response.clearCookie('refresh_roken')
         return "ok"
+    }
+
+    async sessionLimit(body: any) {
+
+        const { email, token } = body
+
+        const user = await this.usersService.findOneByUsername(email)
+
+        if (user.tokens.includes(token)) {
+            return true
+        } else {
+            return false
+        }
+
     }
 }

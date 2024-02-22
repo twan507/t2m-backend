@@ -20,9 +20,17 @@ export class AuthController {
     @Post('/login')
     handleLogin(
         @Req() req,
-        @Res({ passthrough: true }) response: Response
     ) {
-        return this.authService.login(req.user, response);
+        return this.authService.login(req.user);
+    }
+
+    @Public()
+    @ResponseMessage("Check session limit")
+    @Post('/session-limit')
+    handleSessionLimit(
+        @Body() body: any
+    ) {
+        return this.authService.sessionLimit(body);
     }
 
     @Public()
@@ -39,17 +47,6 @@ export class AuthController {
         const temp = await this.roleService.findOne(user.role) as any
         user.permissions = temp.permissions
         return { user }
-    }
-
-    @Public()
-    @ResponseMessage("Get user refresh token")
-    @Get('/refresh')
-    handleRefreshToken(
-        @Req() request: Request,
-        @Res({ passthrough: true }) response: Response
-    ) {
-        const refreshToken = request.cookies["refresh_token"]
-        return this.authService.processNewToken(refreshToken, response)
     }
 
     @ResponseMessage("Logout User")

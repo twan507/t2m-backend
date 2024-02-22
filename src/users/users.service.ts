@@ -224,20 +224,12 @@ export class UsersService {
   }
 
   updateTokensArray = async (_id: string) => {
+    const devices_number = process.env.MAX_DEVICES as unknown as number
     const user = await this.userModel.findOne({ _id: _id });
-    const tokensToKeep = user.tokens.slice(-2); // Cắt lấy 2 phần tử cuối cùng
+    const tokensToKeep = user.tokens.slice(-devices_number); // Cắt lấy 2 phần tử cuối cùng
     await this.userModel.updateOne(
       { _id: _id },
       { $set: { tokens: tokensToKeep } }
-    );
-  }
-
-  refreshTokensArray = async (_id: string, refreshToken: string, newRefreshToken: string) => {
-    const user = await this.userModel.findOne({ _id: _id });
-    let newTokensList = user.tokens.map(item => item === refreshToken ? newRefreshToken : item);
-    await this.userModel.updateOne(
-      { _id: _id },
-      { $set: { tokens: newTokensList } }
     );
   }
 
@@ -255,15 +247,6 @@ export class UsersService {
       { _id: _id },
       { $set: { tokens: newTokensList } }
     );
-  }
-
-  async findUserByToken(refreshToken: string) {
-    const user = await this.userModel.findOne({ 'tokens': refreshToken })
-      .populate({
-        path: "role",
-        select: { name: 1 }
-      })
-    return user;
   }
 
   async forgetPassword(forgetPasswordDto: ForgetPasswordDto) {
@@ -284,7 +267,7 @@ export class UsersService {
                 email: foundUser.email
               }
             })
-            await this.mailService.changePasswordEmail(foundUser.name, foundUser.email)
+          await this.mailService.changePasswordEmail(foundUser.name, foundUser.email)
         } else {
           throw new BadRequestException("Mật khẩu xác nhận không trùng khớp")
         }
