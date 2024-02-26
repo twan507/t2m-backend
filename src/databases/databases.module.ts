@@ -7,13 +7,14 @@ import { Role, RoleSchema } from 'src/roles/schemas/role.schemas';
 import { UsersService } from 'src/users/users.service';
 import { User, UserSchema } from 'src/users/schemas/user.schemas';
 import { MailService } from 'src/mail/mail.service';
-import { MailModule } from 'src/mail/mail.module';
+import { Product, ProductSchema } from 'src/products/schemas/product.schemas';
 
 @Module({
   imports: [MongooseModule.forFeature([
     { name: User.name, schema: UserSchema },
     { name: Permission.name, schema: PermissionSchema },
-    { name: Role.name, schema: RoleSchema }
+    { name: Role.name, schema: RoleSchema },
+    { name: Product.name, schema: ProductSchema } 
   ])],
   controllers: [DatabasesController],
   providers: [DatabasesService, UsersService, MailService]

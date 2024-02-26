@@ -24,12 +24,13 @@ export class LicensesService {
     private productsService: ProductsService,
     private usersService: UsersService,
     private mailService: MailService,
-    ) { }
+  ) { }
 
 
   async updateLincesesDaysLeft() {
     const allLincenses = await this.licenseModel.find()
     for (const lincense of allLincenses) {
+      const foundUser = await this.userModel.findOne({ email: lincense.userEmail })
       const daysLeft = Math.ceil((lincense.endDate.getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24))
       if (daysLeft > 0) {
         await this.licenseModel.updateOne(
@@ -39,7 +40,11 @@ export class LicensesService {
       } else {
         await this.licenseModel.updateOne(
           { _id: lincense._id },
-          { isActive: false }
+          { daysLeft }
+        )
+        await this.changeActivation(
+          //@ts-ignore
+          lincense._id, foundUser, false
         )
         await this.userModel.updateOne(
           { email: lincense.userEmail },
@@ -58,13 +63,12 @@ export class LicensesService {
   async create(createLicenseDto: CreateLicenseDto, user: IUser, file: Express.Multer.File) {
 
     if (!file) {
-      throw new BadRequestException(`Hình ảnh xasc mình chưa đsung hoặc bị thiếu`)
+      throw new BadRequestException(`Hình ảnh xác mình chưa đúng hoặc bị thiếu`)
     }
-
     const { userEmail, product } = createLicenseDto
     const foundProduct = await this.productsService.findProductByName(product)
     const foundUser = await this.usersService.findOneByUsername(userEmail)
-
+    console.log(foundProduct)
     if (foundUser) {
       if (foundUser.license) {
         throw new BadRequestException(`User ${userEmail} đang có một license đã được kích hoạt`)
@@ -143,16 +147,46 @@ export class LicensesService {
       .populate({ path: "permissions", select: { _id: 1, apiPath: 1, name: 1, method: 1, module: 1 } })
   }
 
-  async update(id: string, updateLicenseDto: UpdateLicenseDto, user: IUser) {
+  // async update(id: string, updateLicenseDto: UpdateLicenseDto, user: IUser) {
+  //   return await this.licenseModel.updateOne(
+  //     { _id: id },
+  //     {
+  //       ...updateLicenseDto,
+  //       updatedBy: {
+  //         _id: user._id,
+  //         email: user.email
+  //       }
+  //     }
+  //   );
+  // }
+
+  async changeActivation(id: string, user: IUser, status: boolean) {
+
+    var updatedLicense: any
+    if (status) {
+      //@ts-ignore
+      updatedLicense = (await this.licenseModel.findOne({ _id: id }))._id
+    } else {
+      updatedLicense = ''
+    }
+
     return await this.licenseModel.updateOne(
       { _id: id },
+
+      // Cập nhật trạng thái vô hiệu hoá
       {
-        ...updateLicenseDto,
+        isActive: status,
         updatedBy: {
           _id: user._id,
           email: user.email
         }
-      }
+      },
+
+      // Chính sửa License ở User
+      await this.userModel.updateOne(
+        { email: user.email },
+        { license: updatedLicense }
+      )
     );
   }
 

@@ -26,7 +26,6 @@ export class LicensesController {
     @User() user: IUser,
     @UploadedFile() file: Express.Multer.File
   ) {
-    console.log(file)
     return this.licensesService.create(createLicenseDto, user, file);
   }
 
@@ -50,6 +49,12 @@ export class LicensesController {
   // update(@Param('id') id: string, @Body() updateLicenseDto: UpdateLicenseDto, @User() user: IUser) {
   //   return this.licensesService.update(id, updateLicenseDto, user);
   // }
+
+  @Patch(':id')
+  changeActivation(@Param('id') id: string, @User() user: IUser, @Body() body: { status: string }) {
+    return this.licensesService.changeActivation(id, user, body.status === 'Active' ? true : false);
+
+  }
 
   @Delete(':id')
   remove(@Param('id') id: string, @User() user: IUser) {

@@ -1,4 +1,4 @@
-import { Controller, Post, UseGuards, Body, Res, Req, Get } from '@nestjs/common';
+import { Controller, Post, UseGuards, Body, Res, Req, Get, Headers } from '@nestjs/common';
 import { LocalAuthGuard } from './local-auth.guard';
 import { AuthService } from './auth.service';
 import { Public, ResponseMessage, User } from 'src/decorator/customize';
@@ -6,12 +6,14 @@ import { RegisterUserDto } from 'src/users/dto/create-user.dto';
 import { Response, Request } from 'express';
 import { IUser } from 'src/users/users.interface';
 import { RolesService } from 'src/roles/roles.service';
+import { UsersService } from 'src/users/users.service';
 
 @Controller("auth")
 export class AuthController {
     constructor(
         private authService: AuthService,
-        private roleService: RolesService
+        private rolesService: RolesService,
+        private usersService: UsersService,
     ) { }
 
     @Public()
@@ -44,19 +46,18 @@ export class AuthController {
     @Get('/account')
     async handleGetAccount(@User() user: IUser) {
         //Query xuống DB để lấy permissions từ user đã được đăng kí
-        const temp = await this.roleService.findOne(user.role) as any
+        const temp = await this.rolesService.findOne(user.role) as any
         user.permissions = temp.permissions
         return { user }
     }
 
     @ResponseMessage("Logout User")
     @Post('/logout')
-    handleLogout(
-        @Req() request: Request,
+    async handleLogout(
         @User() user: IUser,
-        @Res({ passthrough: true }) response: Response
+        @Headers('authorization') access_token: string
     ) {
-        const refreshToken = request.cookies["refresh_token"]
-        return this.authService.logout(response, user, refreshToken)
+        await this.usersService.logoutUser(user._id, access_token)
+        return 'Logout User'
     }
 }

@@ -240,9 +240,10 @@ export class UsersService {
     )
   }
 
-  logoutUser = async (_id: string, refreshToken: string) => {
+  logoutUser = async (_id: string, access_token: string) => {
     const user = await this.userModel.findOne({ _id: _id });
-    let newTokensList = user.tokens.filter(item => item !== refreshToken);
+    const delete_token = access_token.split(' ')[1] //Loại bỏ các từ thừa trong token
+    let newTokensList = user.tokens.filter(item => item !== delete_token);
     return await this.userModel.updateOne(
       { _id: _id },
       { $set: { tokens: newTokensList } }

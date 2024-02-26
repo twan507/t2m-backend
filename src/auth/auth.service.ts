@@ -44,7 +44,13 @@ export class AuthService {
 
                 const objUser = {
                     ...user.toObject(),
-                    permissions: userPermissions
+                    permissions: userPermissions,
+                    licenseInfo: {
+                        //@ts-ignore
+                        daysLeft: tempLicense.daysLeft,
+                        //@ts-ignore
+                        product: tempLicense.product,
+                    }
                 }
 
                 return objUser
@@ -55,7 +61,7 @@ export class AuthService {
 
     async login(user: IUser) {
 
-        const { _id, name, email, role, tokens } = user;
+        const { _id, name, email, role, tokens, permissions, licenseInfo } = user;
 
         const payload = {
             sub: "token login", iss: "from server",
@@ -75,7 +81,7 @@ export class AuthService {
 
         return {
             access_token: this.jwtService.sign(payload),
-            user: { _id, name, email, role }
+            user: { _id, name, email, role, licenseInfo, permissions }
         };
     }
 
@@ -85,12 +91,6 @@ export class AuthService {
             _id: newUser?._id,
             createdAt: newUser?.createdAt
         }
-    }
-
-    async logout(response: Response, user: IUser, refreshToken: string) {
-        await this.usersService.logoutUser(user._id, refreshToken);
-        response.clearCookie('refresh_roken')
-        return "ok"
     }
 
     async sessionLimit(body: any) {

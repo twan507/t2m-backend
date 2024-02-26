@@ -14,4 +14,8 @@ export interface IUser {
     } []
     license: string
     tokens: string[]
+    licenseInfo: {
+        daysLeft: number,
+        product: string,
+    }
 }
