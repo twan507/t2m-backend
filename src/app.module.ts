@@ -12,6 +12,7 @@ import { LicensesModule } from './licenses/licenses.module';
 import { ProductsModule } from './products/products.module';
 import { MailModule } from './mail/mail.module';
 import { ScheduleModule } from '@nestjs/schedule';
+import { DiscountcodesModule } from './discountcodes/discountcodes.module';
 require('dotenv').config()
 
 @Module({
@@ -34,6 +35,7 @@ require('dotenv').config()
     LicensesModule,
     ProductsModule,
     MailModule,
+    DiscountcodesModule,
   ],
   controllers: [AppController],
   providers: [AppService],

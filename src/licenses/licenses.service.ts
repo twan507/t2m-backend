@@ -55,7 +55,9 @@ export class LicensesService {
       //Gửi email thông báo tài khoản sắp hết hạn
       if (daysLeft <= 7 && daysLeft > 0) {
         const customer = await this.usersService.findOneByUsername(lincense.userEmail)
-        await this.mailService.licenseExpireEmail(customer.name, daysLeft, customer.email)
+        if (customer.role !== "T2M ADMIN") {
+          await this.mailService.licenseExpireEmail(customer.name, daysLeft, customer.email)
+        }
       }
     }
   }
@@ -68,7 +70,7 @@ export class LicensesService {
     const { userEmail, product } = createLicenseDto
     const foundProduct = await this.productsService.findProductByName(product)
     const foundUser = await this.usersService.findOneByUsername(userEmail)
-    console.log(foundProduct)
+
     if (foundUser) {
       if (foundUser.license) {
         throw new BadRequestException(`User ${userEmail} đang có một license đã được kích hoạt`)
@@ -162,7 +164,7 @@ export class LicensesService {
 
   async changeActivation(id: string, user: IUser, status: boolean) {
 
-    var updatedLicense: any
+    let updatedLicense: any
     if (status) {
       //@ts-ignore
       updatedLicense = (await this.licenseModel.findOne({ _id: id }))._id

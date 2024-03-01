@@ -18,7 +18,7 @@ export class ProductsService {
 
   async create(createProductDto: CreateProductDto, user: IUser) {
 
-    const { name, description, monthsDuration, permissions } = createProductDto
+    const { name, description, monthsDuration, permissions, price } = createProductDto
     const isExist = await this.productModel.findOne({ name })
 
     if (isExist) {
@@ -26,7 +26,7 @@ export class ProductsService {
     }
 
     const newProduct = await this.productModel.create({
-      name, description, monthsDuration,
+      name, description, monthsDuration, price,
       isActive: true, 
       permissions,
       createdBy: {

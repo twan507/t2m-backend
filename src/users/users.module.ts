@@ -6,16 +6,19 @@ import { User, UserSchema } from './schemas/user.schemas';
 import { Role, RoleSchema } from 'src/roles/schemas/role.schemas';
 import { MailService } from 'src/mail/mail.service';
 import { MailModule } from 'src/mail/mail.module';
+import { Discountcode, DiscountcodeSchema } from 'src/discountcodes/schemas/discountcode.schemas';
+import { DiscountcodesService } from 'src/discountcodes/discountcodes.service';
 
 @Module({
   imports: [MailModule,
     MongooseModule.forFeature([
       { name: User.name, schema: UserSchema },
-      { name: Role.name, schema: RoleSchema }
+      { name: Role.name, schema: RoleSchema },
+      { name: Discountcode.name, schema: DiscountcodeSchema }
     ])
   ],
   controllers: [UsersController],
-  providers: [UsersService, MailService],
+  providers: [UsersService, MailService, DiscountcodesService],
   exports: [UsersService]
 })
 export class UsersModule {}

@@ -92,8 +92,8 @@ export class RolesService {
     const foundUser = await this.roleModel.findOne({ _id: id });
     if (!foundUser) {
       throw new BadRequestException("Không tìm thấy Role");
-    } else if (foundUser.name === "SUPER_ADMIN") {
-      throw new BadRequestException("Không thể chỉnh sửa role SUPER_ADMIN")
+    } else if (foundUser.name === "T2M ADMIN") {
+      throw new BadRequestException("Không thể chỉnh sửa role T2M ADMIN")
     }
     return await this.roleModel.updateOne(
       { _id: id },

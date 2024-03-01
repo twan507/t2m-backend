@@ -1,4 +1,4 @@
-import { IsBoolean, IsEmail, IsNotEmpty } from "class-validator"
+import { IsBoolean, IsEmail, IsNotEmpty, IsOptional } from "class-validator"
 
 export class CreateLicenseDto {
 
@@ -9,7 +9,7 @@ export class CreateLicenseDto {
     @IsNotEmpty({ message: "product không được để trống" })
     product: string
 
-    // @IsBoolean()
-    // @IsNotEmpty({ message: 'File không được để trống.' })
-    // fileUploaded: boolean;
+    @IsOptional()
+    discountCode: string
+
 }

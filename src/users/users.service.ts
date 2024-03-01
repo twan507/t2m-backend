@@ -10,6 +10,7 @@ import aqp from 'api-query-params';
 import { Role, RoleDocument } from 'src/roles/schemas/role.schemas';
 import { USER_ROLE } from 'src/databases/sample';
 import { MailService } from 'src/mail/mail.service';
+import { DiscountcodesService } from 'src/discountcodes/discountcodes.service';
 
 @Injectable()
 export class UsersService {
@@ -21,7 +22,8 @@ export class UsersService {
     @InjectModel(Role.name)
     private roleModel: SoftDeleteModel<RoleDocument>,
 
-    private readonly mailService: MailService
+    private readonly mailService: MailService,
+    private readonly discountcodesService: DiscountcodesService,
   ) { }
 
   getHashPassword = (password: string) => {
@@ -37,6 +39,52 @@ export class UsersService {
   findOneByUsername(username: string) {
     return this.userModel.findOne({ email: username })
     // .populate({ path: "role", select: { name: 1 } })
+  }
+
+  async manageCTV(user: IUser, email: string, ctvCode: string) {
+
+    const currentRole = (await this.userModel.findOne({ email })).role
+
+    if (currentRole === 'T2M USER') {
+
+      //Cập nhật mã CTV vào phần mã giảm giá
+      await this.discountcodesService.addCode(ctvCode, [5, 10, 15, 20, 25], 'Affiliate', user)
+
+      //Cập nhật role CTV
+      await this.userModel.updateOne(
+        { email },
+        {
+          role: 'T2M CTV',
+          affiliateCode: ctvCode,
+          updatedBy: {
+            _id: user._id,
+            email: user.email
+          }
+        }
+      )
+      return 'ok'
+
+    } else if (currentRole === 'T2M CTV') {
+      const currentId = (await this.discountcodesService.findDiscountCode(ctvCode))._id
+
+        //Cập nhật role USER
+        await this.userModel.updateOne(
+          { email },
+          {
+            role: 'T2M USER',
+            affiliateCode: '',
+            updatedBy: {
+              _id: user._id,
+              email: user.email
+            }
+          }
+        )
+
+        //Vô hiệu hoá mã CTV trong phần mã giảm giá
+        await this.discountcodesService.changeActivation(currentId.toString(), user, false)
+      return 'ok'
+    }
+
   }
 
   async adminChangePassword(adminChangePasswordDto: AdminChangePasswordDto, user: IUser) {
@@ -180,6 +228,36 @@ export class UsersService {
       throw new BadRequestException("Không tìm thấy User");
     }
     return user;
+  }
+
+  async findAllDependent(currentPage: number, limit: number, qs: string, user: IUser) {
+    const { filter, sort, population } = aqp(qs);
+    delete filter.current
+    delete filter.pageSize
+    filter.sponsorCode = user.affiliateCode;
+
+    let offset = (+currentPage - 1) * (+limit)
+    let defaultLimit = +limit ? +limit : 10
+    const totalItems = (await this.userModel.find(filter)).length
+    const totalPages = Math.ceil(totalItems / defaultLimit)
+
+    const result = await this.userModel.find(filter)
+      .skip(offset)
+      .limit(defaultLimit)
+      .sort(sort as any)
+      .populate(population)
+      .select("-password")
+      .exec()
+
+    return {
+      meta: {
+        current: currentPage,
+        pageSize: limit,
+        pages: totalPages,
+        total: totalItems
+      },
+      result
+    }
   }
 
 

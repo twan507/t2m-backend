@@ -21,6 +21,15 @@ export class License {
     userEmail: string;
 
     @Prop()
+    discountCode: string;
+
+    @Prop()
+    discountPercent: number;
+
+    @Prop()
+    finalPrice: number;
+
+    @Prop()
     imageConfirm: Buffer;
 
     @Prop({ type: Object, ref: Product.name })

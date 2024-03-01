@@ -54,6 +54,14 @@ export class UsersController {
     return this.usersService.adminChangePassword(adminChangePasswordDto, user)
   }
 
+  @Post('manage-ctv')
+  manageCTV(
+    @Body() body: {email: string, ctvCode: string},
+    @User() user: IUser,
+  ) {
+    return this.usersService.manageCTV(user, body.email, body.ctvCode)
+  }
+
   @Get()
   @ResponseMessage("Fetch list user with paginate")
   findAll(
@@ -62,6 +70,17 @@ export class UsersController {
     @Query() qs: string
   ) {
     return this.usersService.findAll(+currentPage, +limit, qs);
+  }
+
+  @Get('dependent')
+  @ResponseMessage("Fetch list dependent user with paginate")
+  findAllDependent(
+    @Query("current") currentPage: string,
+    @Query("pageSize") limit: string,
+    @Query() qs: string,
+    @User() user: IUser
+  ) {
+    return this.usersService.findAllDependent(+currentPage, +limit, qs, user);
   }
 
   @Get(':id')

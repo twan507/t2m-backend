@@ -1,7 +1,154 @@
-export const ADMIN_ROLE = "SUPER_ADMIN";
-export const USER_ROLE = "NORMAL_USER";
+export const ADMIN_ROLE = "T2M ADMIN";
+export const USER_ROLE = "T2M USER";
+export const CTV_ROLE = "T2M CTV";
 
 export const INIT_PERMISSIONS = [
+    {
+        "_id": "65325cadf09c4caf4bc64eb8",
+        "name": "Delete a discount code by id",
+        "apiPath": "/api/v1/discountcodes/:id",
+        "method": "DELETE",
+        "module": "DISCOUNTCODES",
+        "createdBy": {
+            "_id": "65bc76897e9d32d76d997a48",
+            "email": "admin@t2m.vn"
+        },
+        "isDeleted": false,
+        "deletedAt": null,
+        "createdAt": "2023-06-15T06:47:49.369Z",
+        "updatedAt": "2023-06-15T06:54:05.131Z",
+        "__v": 0,
+        "updatedBy": {
+            "_id": "65bc76897e9d32d76d997a48",
+            "email": "admin@t2m.vn"
+        }
+    },
+    {
+        "_id": "65efb3a46a98a7a9ddbc7687",
+        "name": "Find a discount code by id",
+        "apiPath": "/api/v1/discountcodes/:id",
+        "method": "GET",
+        "module": "DISCOUNTCODES",
+        "createdBy": {
+            "_id": "65bc76897e9d32d76d997a48",
+            "email": "admin@t2m.vn"
+        },
+        "isDeleted": false,
+        "deletedAt": null,
+        "createdAt": "2023-06-15T06:47:49.369Z",
+        "updatedAt": "2023-06-15T06:54:05.131Z",
+        "__v": 0,
+        "updatedBy": {
+            "_id": "65bc76897e9d32d76d997a48",
+            "email": "admin@t2m.vn"
+        }
+    },
+    {
+        "_id": "65e3cbb0a8eba7345a8ca892",
+        "name": "Fetch all discount code with paginate",
+        "apiPath": "/api/v1/discountcodes/",
+        "method": "GET",
+        "module": "DISCOUNTCODES",
+        "createdBy": {
+            "_id": "65bc76897e9d32d76d997a48",
+            "email": "admin@t2m.vn"
+        },
+        "isDeleted": false,
+        "deletedAt": null,
+        "createdAt": "2023-06-15T06:47:49.369Z",
+        "updatedAt": "2023-06-15T06:54:05.131Z",
+        "__v": 0,
+        "updatedBy": {
+            "_id": "65bc76897e9d32d76d997a48",
+            "email": "admin@t2m.vn"
+        }
+    },
+    {
+        "_id": "65ca555b0fdb96fb2c359caa",
+        "name": "Create a discount code",
+        "apiPath": "/api/v1/discountcodes/:id",
+        "method": "PATCH",
+        "module": "DISCOUNTCODES",
+        "createdBy": {
+            "_id": "65bc76897e9d32d76d997a48",
+            "email": "admin@t2m.vn"
+        },
+        "isDeleted": false,
+        "deletedAt": null,
+        "createdAt": "2023-06-15T06:47:49.369Z",
+        "updatedAt": "2023-06-15T06:54:05.131Z",
+        "__v": 0,
+        "updatedBy": {
+            "_id": "65bc76897e9d32d76d997a48",
+            "email": "admin@t2m.vn"
+        }
+    },
+    {
+        "_id": "658cc1f2a0b90f1a3ac6d434",
+        "name": "Create a discount code",
+        "apiPath": "/api/v1/discountcodes",
+        "method": "POST",
+        "module": "DISCOUNTCODES",
+        "createdBy": {
+            "_id": "65bc76897e9d32d76d997a48",
+            "email": "admin@t2m.vn"
+        },
+        "isDeleted": false,
+        "deletedAt": null,
+        "createdAt": "2023-06-15T06:47:49.369Z",
+        "updatedAt": "2023-06-15T06:54:05.131Z",
+        "__v": 0,
+        "updatedBy": {
+            "_id": "65bc76897e9d32d76d997a48",
+            "email": "admin@t2m.vn"
+        }
+    },
+
+    {
+        "_id": "65a4a7f9cfd5dc30fca31a4b",
+        "name": "Manage CTV",
+        "apiPath": "/api/v1/users/manage-ctv",
+        "method": "POST",
+        "module": "USERS",
+        "createdBy": {
+            "_id": "65bc76897e9d32d76d997a48",
+            "email": "admin@t2m.vn"
+        },
+        "isDeleted": false,
+        "deletedAt": null,
+        "createdAt": "2023-06-15T06:47:49.369Z",
+        "updatedAt": "2023-06-15T06:54:05.131Z",
+        "__v": 0,
+        "updatedBy": {
+            "_id": "65bc76897e9d32d76d997a48",
+            "email": "admin@t2m.vn"
+        }
+    },
+    {
+        "_id": "65bb5d4bfffff0f0241c4ebe",
+        "name": "Fetch all dependent users with paginate",
+        "apiPath": "/api/v1/users/dependent",
+        "method": "GET",
+        "module": "USERS",
+        "createdBy": {
+            "_id": "65bc76897e9d32d76d997a48",
+            "email": "admin@t2m.vn"
+        },
+        "isDeleted": false,
+        "deletedAt": null,
+        "createdAt": "2023-06-15T06:47:49.369Z",
+        "updatedAt": "2023-06-15T06:54:05.131Z",
+        "__v": 0,
+        "updatedBy": {
+            "_id": "65bc76897e9d32d76d997a48",
+            "email": "admin@t2m.vn"
+        }
+    },
+
+
+
+
+
     {
         "_id": "65bc7f7c2641f3d25ca52f54",
         "name": "Delete a License by ID",
@@ -24,7 +171,7 @@ export const INIT_PERMISSIONS = [
     },
     {
         "_id": "65bc7f7c5465a3dbafc37f5d",
-        "name": "Update a License by ID",
+        "name": "Change Active a License by ID",
         "apiPath": "/api/v1/licenses/:id",
         "method": "PATCH",
         "module": "LICENSES",

@@ -12,6 +12,9 @@ export class CreateProductDto {
     @IsNotEmpty({ message: "monthsDuration không được để trống" })
     monthsDuration: number
 
+    @IsNotEmpty({ message: "Giá tiền không được để trống" })
+    price: number
+
     @IsNotEmpty({ message: "isActive không được để trống" })
     @IsBoolean({ message: "isActive phải có giá trị boolean" })
     isActive: boolean

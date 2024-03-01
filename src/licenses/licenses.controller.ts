@@ -51,9 +51,8 @@ export class LicensesController {
   // }
 
   @Patch(':id')
-  changeActivation(@Param('id') id: string, @User() user: IUser, @Body() body: { status: string }) {
-    return this.licensesService.changeActivation(id, user, body.status === 'Active' ? true : false);
-
+  changeActivation(@Param('id') id: string, @User() user: IUser, @Body() body: { status: boolean }) {
+    return this.licensesService.changeActivation(id, user, body.status);
   }
 
   @Delete(':id')

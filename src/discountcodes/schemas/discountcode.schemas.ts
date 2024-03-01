@@ -1,29 +1,22 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument, Types } from 'mongoose';
-import { Permission } from 'src/permissions/schemas/permission.schemas';
 
-export type ProductDocument = HydratedDocument<Product>;
+export type DiscountcodeDocument = HydratedDocument<Discountcode>;
 
 @Schema({ timestamps: true })
-export class Product {
+export class Discountcode {
 
     @Prop()
-    name: string;
+    code: string
 
     @Prop()
-    description: string;
+    discountPercent: number[]
 
     @Prop()
-    monthsDuration: number;
+    type: string
 
     @Prop()
-    price: number;
-
-    @Prop()
-    isActive: boolean;
-
-    @Prop({ type: [Types.ObjectId], ref: Permission.name })
-    permissions: Permission[];
+    isActive: boolean
 
     @Prop({ type: Object })
     createdBy: {
@@ -54,6 +47,7 @@ export class Product {
 
     @Prop()
     deletedAt: Date;
+
 }
 
-export const ProductSchema = SchemaFactory.createForClass(Product);
+export const DiscountcodeSchema = SchemaFactory.createForClass(Discountcode);
