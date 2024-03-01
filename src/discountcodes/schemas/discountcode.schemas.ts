@@ -7,6 +7,9 @@ export type DiscountcodeDocument = HydratedDocument<Discountcode>;
 export class Discountcode {
 
     @Prop()
+    userEmail: string
+
+    @Prop()
     code: string
 
     @Prop()

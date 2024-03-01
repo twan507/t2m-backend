@@ -48,7 +48,7 @@ export class UsersService {
     if (currentRole === 'T2M USER') {
 
       //Cập nhật mã CTV vào phần mã giảm giá
-      await this.discountcodesService.addCode(ctvCode, [5, 10, 15, 20, 25], 'Affiliate', user)
+      await this.discountcodesService.addCode(ctvCode, [5, 10, 15, 20, 25], 'Affiliate', user, email)
 
       //Cập nhật role CTV
       await this.userModel.updateOne(
@@ -65,7 +65,7 @@ export class UsersService {
       return 'ok'
 
     } else if (currentRole === 'T2M CTV') {
-      const currentId = (await this.discountcodesService.findDiscountCode(ctvCode))._id
+      const currentId = await this.discountcodesService.findDiscountCode(ctvCode, email)
 
         //Cập nhật role USER
         await this.userModel.updateOne(
@@ -135,7 +135,7 @@ export class UsersService {
   }
 
   async create(createUserDto: CreateUserDto, user: IUser) {
-    const { email, password, name, phoneNumber, affiliateCode, sponsorCode, role } = createUserDto
+    const { email, password, name, phoneNumber, sponsorCode, role } = createUserDto
 
     const isExist = await this.userModel.findOne({ email })
     if (isExist) {
@@ -150,7 +150,7 @@ export class UsersService {
       name,
       phoneNumber,
       license: "",
-      affiliateCode: affiliateCode ? affiliateCode : "",
+      affiliateCode: "",
       sponsorCode: sponsorCode ? sponsorCode : "",
       role: roleId.name,
       createdBy: {

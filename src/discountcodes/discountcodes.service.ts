@@ -38,20 +38,35 @@ export class DiscountcodesService {
     }
   }
 
-  async addCode(code: string, discountPercent: number[], type: string, user: IUser) {
+  async addCode(code: string, discountPercent: number[], type: string, user: IUser, userEmail: string) {
 
     const foundCode = await this.discountcodeModel.findOne({ code })
     if (foundCode) {
-      throw new BadRequestException(`Mã ${code} đã tồn tại`)
+      if (!foundCode.userEmail) {
+        throw new BadRequestException(`Mã ${code} đã tồn tại`)
+      } else {
+        await this.discountcodeModel.updateOne(
+          { userEmail: foundCode.userEmail },
+          { isActive: true }
+        )
+        return 'ok'
+      }
+    }
+
+    const foundUser = await this.discountcodeModel.findOne({ userEmail })
+    if (foundUser) {
+      throw new BadRequestException(`Tài khoản ${userEmail} đã tồn tại mã CTV, hãy kích hoạt lại với mã ${foundUser.code}`)
     }
 
     await this.discountcodeModel.create({
-      code, discountPercent, isActive: true, type,
+      userEmail, code, discountPercent, isActive: true, type,
       createdBy: {
         _id: user._id,
         email: user.email
       }
     })
+
+    return 'ok'
   }
 
   async findAll(currentPage: number, limit: number, qs: string) {
@@ -90,8 +105,19 @@ export class DiscountcodesService {
     return code;
   }
 
-  async findDiscountCode(code: string) {
-    return await this.discountcodeModel.findOne({ code })
+  async findDiscountCode(code: string, userEmail: string) {
+    const foundCode = await this.discountcodeModel.findOne({ code })
+    if (foundCode) {
+      return foundCode._id
+    } else {
+      const foundUser = await this.discountcodeModel.findOne({ userEmail })
+      throw new BadRequestException(`Sử dụng mã ${foundUser.code} để huỷ tư cách CTV của ${userEmail}`);
+    }
+  }
+
+  async findAllSponsorCode() {
+    const codeList = await this.discountcodeModel.find({ type: { $ne: 'Discount' } })
+    return codeList.map(item => item.code)
   }
 
   async changeActivation(id: string, user: IUser, status: boolean) {

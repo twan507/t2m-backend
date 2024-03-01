@@ -160,9 +160,20 @@ export class DatabasesService implements OnModuleInit {
                     },
                     {
                         _id: "65ac92615d129792b1c31257",
-                        email: "user@t2m.vn",
+                        email: "user1@t2m.vn",
                         password: this.userService.getHashPassword(process.env.INIT_PASSWORD),
-                        name: "T2M USER",
+                        name: "T2M USER 1",
+                        phoneNumber: "0123456789",
+                        affiliateCode: "",
+                        sponsorCode: "CTV000",
+                        role: userRole?.name,
+                        license: ""
+                    },
+                    {
+                        _id: "65902cfde8ed8a68ef4f8cc4",
+                        email: "user2@t2m.vn",
+                        password: this.userService.getHashPassword(process.env.INIT_PASSWORD),
+                        name: "T2M USER 2",
                         phoneNumber: "0123456789",
                         affiliateCode: "",
                         sponsorCode: "CTV000",
@@ -176,6 +187,7 @@ export class DatabasesService implements OnModuleInit {
                 await this.discountcodeModel.insertMany([
                     {
                         _id: "65ab8fabd66c3811fa2c04d1",
+                        userEmail: 'tradertruongdao@t2m.vn',
                         code: 'VIP001',
                         discountPercent: [5, 10, 15, 20, 25],
                         type: 'Admin',
@@ -183,6 +195,7 @@ export class DatabasesService implements OnModuleInit {
                     },
                     {
                         _id: "656ca0a8f38f38fdee1139ec",
+                        userEmail: 'maigt@t2m.vn',
                         code: 'VIP002',
                         discountPercent: [5, 10, 15, 20, 25],
                         type: 'Admin',
@@ -190,9 +203,18 @@ export class DatabasesService implements OnModuleInit {
                     },
                     {
                         _id: "655efedb9aec0d54ae553dec",
+                        userEmail: 'tuanba@t2m.vn',
                         code: 'VIP003',
                         discountPercent: [5, 10, 15, 20, 25],
                         type: 'Admin',
+                        isActive: true,
+                    },
+                    {
+                        _id: "659cfafcf65d2c86dd680ca0",
+                        userEmail: 'ctv@t2m.vn',
+                        code: 'CTV000',
+                        discountPercent: [5, 10, 15, 20, 25],
+                        type: 'Affiliate',
                         isActive: true,
                     },
                 ]);

@@ -24,9 +24,6 @@ export class CreateUserDto {
     role: string
 
     @IsOptional()
-    affiliateCode: string
-
-    @IsOptional()
     sponsorCode: string
 }
 

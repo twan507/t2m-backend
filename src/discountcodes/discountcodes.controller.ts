@@ -2,7 +2,7 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestj
 import { DiscountcodesService } from './discountcodes.service';
 import { CreateDiscountcodeDto } from './dto/create-discountcode.dto';
 import { UpdateDiscountcodeDto } from './dto/update-discountcode.dto';
-import { ResponseMessage, User } from 'src/decorator/customize';
+import { Public, ResponseMessage, User } from 'src/decorator/customize';
 import { IUser } from 'src/users/users.interface';
 
 @Controller('discountcodes')
@@ -25,6 +25,13 @@ export class DiscountcodesController {
     @Query() qs: string
   ) {
     return this.discountcodesService.findAll(+currentPage, +limit, qs);
+  }
+
+  @Get('sponsorcode')
+  @Public()
+  @ResponseMessage("Get list sponsor code")
+  findAllSponsorCode() {
+    return this.discountcodesService.findAllSponsorCode();
   }
 
   @Get(':id')
