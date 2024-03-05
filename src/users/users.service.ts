@@ -67,21 +67,21 @@ export class UsersService {
     } else if (currentRole === 'T2M CTV') {
       const currentId = await this.discountcodesService.findDiscountCode(ctvCode, email)
 
-        //Cập nhật role USER
-        await this.userModel.updateOne(
-          { email },
-          {
-            role: 'T2M USER',
-            affiliateCode: '',
-            updatedBy: {
-              _id: user._id,
-              email: user.email
-            }
+      //Cập nhật role USER
+      await this.userModel.updateOne(
+        { email },
+        {
+          role: 'T2M USER',
+          affiliateCode: '',
+          updatedBy: {
+            _id: user._id,
+            email: user.email
           }
-        )
+        }
+      )
 
-        //Vô hiệu hoá mã CTV trong phần mã giảm giá
-        await this.discountcodesService.changeActivation(currentId.toString(), user, false)
+      //Vô hiệu hoá mã CTV trong phần mã giảm giá
+      await this.discountcodesService.changeActivation(currentId.toString(), user, false)
       return 'ok'
     }
 
@@ -107,6 +107,7 @@ export class UsersService {
     } else {
       throw new BadRequestException("Mật khẩu xác nhận không trùng khớp")
     }
+    return 'ok'
   }
 
   async changePassword(changePasswordDto: ChangePasswordDto, user: IUser) {
@@ -137,7 +138,7 @@ export class UsersService {
   async create(createUserDto: CreateUserDto, user: IUser) {
     const { email, password, name, phoneNumber, sponsorCode, role } = createUserDto
 
-    const isExist = await this.userModel.findOne({ email })
+    const isExist = await this.userModel.findOne({ email, isDeleted: false })
     if (isExist) {
       throw new BadRequestException(`Email: ${email} đã tồn tại, vui lòng sử dụng email khác`)
     }
@@ -298,6 +299,7 @@ export class UsersService {
       }
     );
     // Thực hiện soft delete
+    
     return await this.userModel.softDelete({ _id: id });
   }
 

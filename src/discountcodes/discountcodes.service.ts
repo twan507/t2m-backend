@@ -40,22 +40,23 @@ export class DiscountcodesService {
 
   async addCode(code: string, discountPercent: number[], type: string, user: IUser, userEmail: string) {
 
+    const foundUser = await this.discountcodeModel.findOne({ userEmail })
+    if (foundUser) {
+      if (code !== foundUser.code) {
+        throw new BadRequestException(`Tài khoản ${userEmail} đã tồn tại mã CTV, hãy kích hoạt lại với mã ${foundUser.code}`)
+      }
+    }
+
     const foundCode = await this.discountcodeModel.findOne({ code })
     if (foundCode) {
-      if (!foundCode.userEmail) {
-        throw new BadRequestException(`Mã ${code} đã tồn tại`)
-      } else {
+      if (!foundCode.isActive) {
         await this.discountcodeModel.updateOne(
           { userEmail: foundCode.userEmail },
           { isActive: true }
         )
-        return 'ok'
+      } else {
+        throw new BadRequestException(`Mã ${code} đã tồn tại`)
       }
-    }
-
-    const foundUser = await this.discountcodeModel.findOne({ userEmail })
-    if (foundUser) {
-      throw new BadRequestException(`Tài khoản ${userEmail} đã tồn tại mã CTV, hãy kích hoạt lại với mã ${foundUser.code}`)
     }
 
     await this.discountcodeModel.create({
@@ -65,8 +66,33 @@ export class DiscountcodesService {
         email: user.email
       }
     })
+  }
 
-    return 'ok'
+  async findDiscountCode(code: string, userEmail: string) {
+    const foundCode = await this.discountcodeModel.findOne({ code, isActive: true })
+    const foundUser = await this.discountcodeModel.findOne({ userEmail, isActive: true })
+
+    //@ts-ignore
+    if (foundCode.code === foundUser.code) {
+      return foundCode._id
+    } else {
+      throw new BadRequestException(`Sử dụng mã ${foundUser.code} để huỷ tư cách CTV của ${userEmail}`);
+    }
+  }
+
+  async changeActivation(id: string, user: IUser, status: boolean) {
+    return await this.discountcodeModel.updateOne(
+      { _id: id },
+
+      // Cập nhật trạng thái vô hiệu hoá
+      {
+        isActive: status,
+        updatedBy: {
+          _id: user._id,
+          email: user.email
+        }
+      },
+    );
   }
 
   async findAll(currentPage: number, limit: number, qs: string) {
@@ -105,34 +131,9 @@ export class DiscountcodesService {
     return code;
   }
 
-  async findDiscountCode(code: string, userEmail: string) {
-    const foundCode = await this.discountcodeModel.findOne({ code })
-    if (foundCode) {
-      return foundCode._id
-    } else {
-      const foundUser = await this.discountcodeModel.findOne({ userEmail })
-      throw new BadRequestException(`Sử dụng mã ${foundUser.code} để huỷ tư cách CTV của ${userEmail}`);
-    }
-  }
-
   async findAllSponsorCode() {
     const codeList = await this.discountcodeModel.find({ type: { $ne: 'Discount' } })
     return codeList.map(item => item.code)
-  }
-
-  async changeActivation(id: string, user: IUser, status: boolean) {
-    return await this.discountcodeModel.updateOne(
-      { _id: id },
-
-      // Cập nhật trạng thái vô hiệu hoá
-      {
-        isActive: status,
-        updatedBy: {
-          _id: user._id,
-          email: user.email
-        }
-      },
-    );
   }
 
   async remove(id: string, user: IUser) {
