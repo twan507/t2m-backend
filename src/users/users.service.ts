@@ -299,7 +299,7 @@ export class UsersService {
       }
     );
     // Thực hiện soft delete
-    
+
     return await this.userModel.softDelete({ _id: id });
   }
 
