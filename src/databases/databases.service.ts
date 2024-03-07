@@ -56,54 +56,31 @@ export class DatabasesService implements OnModuleInit {
                         _id: "65bc7689a2be17285bf42c81",
                         name: ADMIN_ROLE,
                         isActive: true,
-                        permissions: permissions
+                        permissions: permissions,
+                        createdBy: {
+                            "_id": "65bc76897e9d32d76d997a48",
+                            "email": "admin@t2m.vn"
+                        }
                     },
                     {
                         _id: "65bc76898f73921d2363a9eb",
                         name: USER_ROLE,
                         isActive: true,
-                        permissions: [] //không set quyền, chỉ cần add ROLE
+                        permissions: [], //không set quyền, chỉ cần add ROLE
+                        createdBy: {
+                            "_id": "65bc76897e9d32d76d997a48",
+                            "email": "admin@t2m.vn"
+                        }
                     },
                     {
                         _id: "65bcd948b8ef62c47fc3cad6",
                         name: CTV_ROLE,
                         isActive: true,
-                        permissions: ['65bb5d4bfffff0f0241c4ebe']
-                    },
-                ]);
-            }
-
-            // create role
-            if (countProduct === 0) {
-                const permissions = await this.productModel.find({}).select("_id");
-                await this.productModel.insertMany([
-                    {
-                        _id: "6562ab56db6ccf2b1baf343b",
-                        name: 'FREE',
-                        monthsDuration: 999,
-                        isActive: true,
-                        permissions: []
-                    },
-                    {
-                        _id: "6531541fed0d0ec2fcccd3ec",
-                        name: 'BASIC',
-                        monthsDuration: 12,
-                        isActive: true,
-                        permissions: []
-                    },
-                    {
-                        _id: "65759a4c34b40159373557df",
-                        name: 'PRO',
-                        monthsDuration: 12,
-                        isActive: true,
-                        permissions: []
-                    },
-                    {
-                        _id: "65df43714b4f634586f36407",
-                        name: 'PREMIUM',
-                        monthsDuration: 12,
-                        isActive: true,
-                        permissions: []
+                        permissions: [],
+                        createdBy: {
+                            "_id": "65bc76897e9d32d76d997a48",
+                            "email": "admin@t2m.vn"
+                        }
                     },
                 ]);
             }
@@ -116,6 +93,21 @@ export class DatabasesService implements OnModuleInit {
                 await this.userModel.insertMany([
                     {
                         _id: "65bc76897e9d32d76d997a48",
+                        email: "admin@t2m.vn",
+                        password: this.userService.getHashPassword(process.env.INIT_PASSWORD),
+                        name: "T2M ADMIN",
+                        affiliateCode: "",
+                        sponsorCode: "",
+                        phoneNumber: "0123456789",
+                        role: adminRole?.name,
+                        license: "",
+                        createdBy: {
+                            "_id": "65bc76897e9d32d76d997a48",
+                            "email": "admin@t2m.vn"
+                        }
+                    },
+                    {
+                        _id: "650730de8f1fdf605bd5dc88",
                         email: "tradertruongdao@t2m.vn",
                         password: this.userService.getHashPassword(process.env.INIT_PASSWORD),
                         name: "tradertruongdao",
@@ -123,7 +115,11 @@ export class DatabasesService implements OnModuleInit {
                         sponsorCode: "",
                         phoneNumber: "0888213688",
                         role: adminRole?.name,
-                        license: ""
+                        license: "",
+                        createdBy: {
+                            "_id": "65bc76897e9d32d76d997a48",
+                            "email": "admin@t2m.vn"
+                        }
                     },
                     {
                         _id: "658d5435b0ee9d55433e05cb",
@@ -134,7 +130,11 @@ export class DatabasesService implements OnModuleInit {
                         sponsorCode: "",
                         phoneNumber: "0973321345",
                         role: adminRole?.name,
-                        license: ""
+                        license: "",
+                        createdBy: {
+                            "_id": "65bc76897e9d32d76d997a48",
+                            "email": "admin@t2m.vn"
+                        }
                     },
                     {
                         _id: "65d794cee8f8d2ffa24d7c53",
@@ -145,7 +145,11 @@ export class DatabasesService implements OnModuleInit {
                         sponsorCode: "",
                         phoneNumber: "0912005777",
                         role: adminRole?.name,
-                        license: ""
+                        license: "",
+                        createdBy: {
+                            "_id": "65bc76897e9d32d76d997a48",
+                            "email": "admin@t2m.vn"
+                        }
                     },
                     {
                         _id: "65bc7689a59dc544823ae394",
@@ -156,7 +160,11 @@ export class DatabasesService implements OnModuleInit {
                         affiliateCode: "CTV000",
                         sponsorCode: "",
                         role: ctvRole?.name,
-                        license: ""
+                        license: "",
+                        createdBy: {
+                            "_id": "65bc76897e9d32d76d997a48",
+                            "email": "admin@t2m.vn"
+                        }
                     },
                     {
                         _id: "65ac92615d129792b1c31257",
@@ -167,7 +175,11 @@ export class DatabasesService implements OnModuleInit {
                         affiliateCode: "",
                         sponsorCode: "CTV000",
                         role: userRole?.name,
-                        license: ""
+                        license: "",
+                        createdBy: {
+                            "_id": "65bc76897e9d32d76d997a48",
+                            "email": "admin@t2m.vn"
+                        }
                     },
                     {
                         _id: "65902cfde8ed8a68ef4f8cc4",
@@ -178,9 +190,85 @@ export class DatabasesService implements OnModuleInit {
                         affiliateCode: "",
                         sponsorCode: "CTV000",
                         role: userRole?.name,
-                        license: ""
+                        license: "",
+                        createdBy: {
+                            "_id": "65bc76897e9d32d76d997a48",
+                            "email": "admin@t2m.vn"
+                        }
                     },
                 ])
+            }
+
+            // create products
+            if (countProduct === 0) {
+                const permissions = await this.productModel.find({}).select("_id");
+                await this.productModel.insertMany([
+                    {
+                        _id: "65b8f0ff5c3c9a2d111a5ceb",
+                        name: 'TRIAL',
+                        monthsDuration: 0,
+                        accessLevel: 4,
+                        price: 0,
+                        isActive: true,
+                        permissions: [],
+                        createdBy: {
+                            "_id": "65bc76897e9d32d76d997a48",
+                            "email": "admin@t2m.vn"
+                        }
+                    },
+                    {
+                        _id: "659fdb605bb15cebbeb9f3ee",
+                        name: 'BASIC',
+                        monthsDuration: 1,
+                        accessLevel: 1,
+                        price: 2000000,
+                        isActive: true,
+                        permissions: [],
+                        createdBy: {
+                            "_id": "65bc76897e9d32d76d997a48",
+                            "email": "admin@t2m.vn"
+                        }
+                    },
+                    {
+                        _id: "6531541fed0d0ec2fcccd3ec",
+                        name: 'ADVANCED',
+                        monthsDuration: 3,
+                        accessLevel: 2,
+                        price: 4000000,
+                        isActive: true,
+                        permissions: [],
+                        createdBy: {
+                            "_id": "65bc76897e9d32d76d997a48",
+                            "email": "admin@t2m.vn"
+                        }
+                    },
+                    {
+                        _id: "65759a4c34b40159373557df",
+                        name: 'PRO',
+                        monthsDuration: 6,
+                        accessLevel: 3,
+                        price: 6000000,
+                        isActive: true,
+                        permissions: [],
+                        createdBy: {
+                            "_id": "65bc76897e9d32d76d997a48",
+                            "email": "admin@t2m.vn"
+                        }
+                    },
+                    {
+                        _id: "65df43714b4f634586f36407",
+                        name: 'PREMIUM',
+                        monthsDuration: 12,
+                        accessLevel: 4,
+                        price: 10000000,
+                        isActive: true,
+                        permissions: [],
+                        createdBy: {
+                            "_id": "65bc76897e9d32d76d997a48",
+                            "email": "admin@t2m.vn"
+                        }
+                    },
+                ]);
             }
 
             if (countCode === 0) {
@@ -192,6 +280,10 @@ export class DatabasesService implements OnModuleInit {
                         discountPercent: [5, 10, 15, 20, 25],
                         type: 'Admin',
                         isActive: true,
+                        createdBy: {
+                            "_id": "65bc76897e9d32d76d997a48",
+                            "email": "admin@t2m.vn"
+                        }
                     },
                     {
                         _id: "656ca0a8f38f38fdee1139ec",
@@ -200,6 +292,10 @@ export class DatabasesService implements OnModuleInit {
                         discountPercent: [5, 10, 15, 20, 25],
                         type: 'Admin',
                         isActive: true,
+                        createdBy: {
+                            "_id": "65bc76897e9d32d76d997a48",
+                            "email": "admin@t2m.vn"
+                        }
                     },
                     {
                         _id: "655efedb9aec0d54ae553dec",
@@ -208,6 +304,10 @@ export class DatabasesService implements OnModuleInit {
                         discountPercent: [5, 10, 15, 20, 25],
                         type: 'Admin',
                         isActive: true,
+                        createdBy: {
+                            "_id": "65bc76897e9d32d76d997a48",
+                            "email": "admin@t2m.vn"
+                        }
                     },
                     {
                         _id: "659cfafcf65d2c86dd680ca0",
@@ -216,6 +316,10 @@ export class DatabasesService implements OnModuleInit {
                         discountPercent: [5, 10, 15, 20, 25],
                         type: 'Affiliate',
                         isActive: true,
+                        createdBy: {
+                            "_id": "65bc76897e9d32d76d997a48",
+                            "email": "admin@t2m.vn"
+                        }
                     },
                 ]);
             }

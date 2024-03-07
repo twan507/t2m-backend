@@ -6,19 +6,50 @@ import { Product, ProductDocument } from './schemas/Product.schemas';
 import { SoftDeleteModel } from 'soft-delete-plugin-mongoose';
 import { IUser } from 'src/users/users.interface';
 import aqp from 'api-query-params';
+import { License, LicenseDocument } from 'src/licenses/schemas/license.schemas';
 
 @Injectable()
 export class ProductsService {
 
   constructor(
     @InjectModel(Product.name)
-    private productModel: SoftDeleteModel<ProductDocument>
+    private productModel: SoftDeleteModel<ProductDocument>,
+
+    @InjectModel(License.name)
+    private licenseModel: SoftDeleteModel<LicenseDocument>,
   ) { }
 
+  async changeActivation(id: string, user: IUser, status: boolean) {
+
+    const foundProduct = await this.productModel.findOne({ _id: id })
+    const foundLicense = await this.licenseModel.findOne({ product: foundProduct.name })
+
+    if (foundLicense && status === false) {
+      throw new BadRequestException(`Không thể vô hiệu hoá sản phẩm ${foundProduct.name} do vẫn còn License đang sử dụng`)
+    }
+
+    return await this.productModel.updateOne(
+      { _id: id },
+
+      // Cập nhật trạng thái vô hiệu hoá
+      {
+        isActive: status,
+        updatedBy: {
+          _id: user._id,
+          email: user.email
+        }
+      }
+    )
+  }
+
+  async findActiveProducts() {
+    const productList = await this.productModel.find({ isActive: true })
+    return productList.map(item => item.name)
+  }
 
   async create(createProductDto: CreateProductDto, user: IUser) {
 
-    const { name, description, monthsDuration, permissions, price } = createProductDto
+    const { name, monthsDuration, permissions, price, accessLevel } = createProductDto
     const isExist = await this.productModel.findOne({ name })
 
     if (isExist) {
@@ -26,8 +57,8 @@ export class ProductsService {
     }
 
     const newProduct = await this.productModel.create({
-      name, description, monthsDuration, price,
-      isActive: true, 
+      name, monthsDuration, price, accessLevel,
+      isActive: true,
       permissions,
       createdBy: {
         _id: user._id,

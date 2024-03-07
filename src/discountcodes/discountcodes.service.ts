@@ -132,7 +132,7 @@ export class DiscountcodesService {
   }
 
   async findAllSponsorCode() {
-    const codeList = await this.discountcodeModel.find({ type: { $ne: 'Discount' } })
+    const codeList = await this.discountcodeModel.find({ type: { $ne: 'Discount' },  isActive: true })
     return codeList.map(item => item.code)
   }
 

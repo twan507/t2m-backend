@@ -4,6 +4,27 @@ export const CTV_ROLE = "T2M CTV";
 
 export const INIT_PERMISSIONS = [
     {
+        "_id": "6562ab56db6ccf2b1baf343b",
+        "name": "Find a discount code by id",
+        "apiPath": "/api/v1/discountcodes/:id",
+        "method": "GET",
+        "module": "PRODUCTS",
+        "createdBy": {
+            "_id": "65bc76897e9d32d76d997a48",
+            "email": "admin@t2m.vn"
+        },
+        "isDeleted": false,
+        "deletedAt": null,
+        "createdAt": "2023-06-15T06:47:49.369Z",
+        "updatedAt": "2023-06-15T06:54:05.131Z",
+        "__v": 0,
+        "updatedBy": {
+            "_id": "65bc76897e9d32d76d997a48",
+            "email": "admin@t2m.vn"
+        }
+    },
+
+    {
         "_id": "65325cadf09c4caf4bc64eb8",
         "name": "Delete a discount code by id",
         "apiPath": "/api/v1/discountcodes/:id",

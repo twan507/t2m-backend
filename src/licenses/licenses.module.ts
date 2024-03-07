@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Global, Module } from '@nestjs/common';
 import { LicensesService } from './licenses.service';
 import { LicensesController } from './licenses.controller';
 import { MongooseModule } from '@nestjs/mongoose';

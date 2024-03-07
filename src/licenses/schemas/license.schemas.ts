@@ -21,6 +21,12 @@ export class License {
     userEmail: string;
 
     @Prop()
+    product: string
+
+    @Prop()
+    accessLevel: number
+    
+    @Prop()
     discountCode: string;
 
     @Prop()
@@ -31,9 +37,6 @@ export class License {
 
     @Prop()
     imageConfirm: Buffer;
-
-    @Prop({ type: Object, ref: Product.name })
-    product: Product
 
     @Prop({ type: [Types.ObjectId], ref: Permission.name })
     permissions: Permission[];

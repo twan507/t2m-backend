@@ -11,10 +11,10 @@ export class Product {
     name: string;
 
     @Prop()
-    description: string;
+    monthsDuration: number;
 
     @Prop()
-    monthsDuration: number;
+    accessLevel: number;
 
     @Prop()
     price: number;

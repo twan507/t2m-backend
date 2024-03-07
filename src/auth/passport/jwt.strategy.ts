@@ -46,6 +46,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       role,
       affiliateCode,
       sponsorCode,
+      // accessLevel: tempLicense?.accessLevel,
       permissions: userPermissions
     };
   }

@@ -81,7 +81,16 @@ export class LicensesService {
 
     // Tính toán lưu lại các ngày hiệu lực
     const startDate = new Date();
-    const endDate = new Date(new Date().setMonth(new Date().getMonth() + foundProduct.monthsDuration))
+    let endDate: Date;
+
+    if (foundProduct.monthsDuration < 1) {
+      // Nếu monthsDuration nhỏ hơn 1, thêm 7 ngày vào startDate, cho bản dùng thử
+      endDate = new Date(startDate.getTime() + (7 * 24 * 60 * 60 * 1000)); // 7 days in milliseconds
+    } else {
+      // Nếu monthsDuration lớn hơn hoặc bằng 1, thực hiện thêm tháng như bình thường
+      endDate = new Date(startDate.setMonth(startDate.getMonth() + foundProduct.monthsDuration));
+    }
+
     const daysLeft = (endDate.getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24)
 
     const newLicense = await this.licenseModel.create({
@@ -90,6 +99,7 @@ export class LicensesService {
       daysLeft,
       userEmail,
       product: foundProduct.name,
+      accessLevel: foundProduct.accessLevel,
       permissions: foundProduct.permissions,
       isActive: true,
       imageConfirm: file.buffer,
@@ -184,7 +194,7 @@ export class LicensesService {
         }
       },
 
-      // Chính sửa License ở User
+      // Chính sửa xoá License ở User
       await this.userModel.updateOne(
         { email: user.email },
         { license: updatedLicense }

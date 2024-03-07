@@ -50,6 +50,8 @@ export class AuthService {
                         daysLeft: tempLicense.daysLeft,
                         //@ts-ignore
                         product: tempLicense.product,
+                        //@ts-ignore
+                        accessLevel: tempLicense.accessLevel,
                     }
                 }
 

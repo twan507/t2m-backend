@@ -24,15 +24,26 @@ export class ProductsController {
     return this.productsService.findAll(+current, +pageSize, qs);
   }
 
+  @Public()
+  @Get('active-list')
+  @ResponseMessage("Get list active product")
+  findActiveProducts() {
+    return this.productsService.findActiveProducts();
+  }
+
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.productsService.findOne(id);
   }
 
+  // @Patch(':id')
+  // update(@Param('id') id: string, @Body() updateProductDto: UpdateProductDto, @User() user: IUser) {
+  //   return this.productsService.update(id, updateProductDto, user);
+  // }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateProductDto: UpdateProductDto, @User() user: IUser) {
-    return this.productsService.update(id, updateProductDto, user);
+  changeActivation(@Param('id') id: string, @User() user: IUser, @Body() body: { status: boolean }) {
+    return this.productsService.changeActivation(id, user, body.status);
   }
 
   @Delete(':id')
