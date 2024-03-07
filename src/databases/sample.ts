@@ -192,7 +192,27 @@ export const INIT_PERMISSIONS = [
     },
     {
         "_id": "65bc7f7c5465a3dbafc37f5d",
-        "name": "Change Active a License by ID",
+        "name": "Update a License by ID",
+        "apiPath": "/api/v1/licenses/:id",
+        "method": "PUT",
+        "module": "LICENSES",
+        "createdBy": {
+            "_id": "65bc76897e9d32d76d997a48",
+            "email": "admin@t2m.vn"
+        },
+        "isDeleted": false,
+        "deletedAt": null,
+        "createdAt": "2023-06-15T06:47:49.369Z",
+        "updatedAt": "2023-06-15T06:54:05.131Z",
+        "__v": 0,
+        "updatedBy": {
+            "_id": "65bc76897e9d32d76d997a48",
+            "email": "admin@t2m.vn"
+        }
+    },
+    {
+        "_id": "6526ca86be706dd239fbfad9",
+        "name": "Change Activation a License by ID",
         "apiPath": "/api/v1/licenses/:id",
         "method": "PATCH",
         "module": "LICENSES",
@@ -292,9 +312,29 @@ export const INIT_PERMISSIONS = [
     },
     {
         "_id": "65bc7e89e8e3f3e2f2cb744a",
-        "name": "Update a Product by ID",
+        "name": "Change Activation a Product by ID",
         "apiPath": "/api/v1/products/:id",
         "method": "PATCH",
+        "module": "PRODUCTS",
+        "createdBy": {
+            "_id": "65bc76897e9d32d76d997a48",
+            "email": "admin@t2m.vn"
+        },
+        "isDeleted": false,
+        "deletedAt": null,
+        "createdAt": "2023-06-15T06:47:49.369Z",
+        "updatedAt": "2023-06-15T06:54:05.131Z",
+        "__v": 0,
+        "updatedBy": {
+            "_id": "65bc76897e9d32d76d997a48",
+            "email": "admin@t2m.vn"
+        }
+    },
+        {
+        "_id": "65efeaafdcd59afdc5fcc3ce",
+        "name": "Update a Product by ID",
+        "apiPath": "/api/v1/products/:id",
+        "method": "PUT",
         "module": "PRODUCTS",
         "createdBy": {
             "_id": "65bc76897e9d32d76d997a48",

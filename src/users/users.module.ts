@@ -8,17 +8,19 @@ import { MailService } from 'src/mail/mail.service';
 import { MailModule } from 'src/mail/mail.module';
 import { Discountcode, DiscountcodeSchema } from 'src/discountcodes/schemas/discountcode.schemas';
 import { DiscountcodesService } from 'src/discountcodes/discountcodes.service';
+import { License, LicenseSchema } from 'src/licenses/schemas/license.schemas';
 
 @Module({
   imports: [MailModule,
     MongooseModule.forFeature([
       { name: User.name, schema: UserSchema },
       { name: Role.name, schema: RoleSchema },
-      { name: Discountcode.name, schema: DiscountcodeSchema }
+      { name: Discountcode.name, schema: DiscountcodeSchema },
+      { name: License.name, schema: LicenseSchema }
     ])
   ],
   controllers: [UsersController],
   providers: [UsersService, MailService, DiscountcodesService],
   exports: [UsersService]
 })
-export class UsersModule {}
+export class UsersModule { }

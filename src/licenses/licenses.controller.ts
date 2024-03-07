@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query, UseInterceptors, UploadedFile } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, UseInterceptors, UploadedFile, Put } from '@nestjs/common';
 import { CreateLicenseDto } from './dto/create-License.dto';
 import { UpdateLicenseDto } from './dto/update-License.dto';
 import { Public, ResponseMessage, User } from 'src/decorator/customize';
@@ -45,10 +45,10 @@ export class LicensesController {
   }
 
 
-  // @Patch(':id')
-  // update(@Param('id') id: string, @Body() updateLicenseDto: UpdateLicenseDto, @User() user: IUser) {
-  //   return this.licensesService.update(id, updateLicenseDto, user);
-  // }
+  @Put(':id')
+  update(@Param('id') id: string, @Body() updateLicenseDto: UpdateLicenseDto, @User() user: IUser) {
+    return this.licensesService.update(id, updateLicenseDto, user);
+  }
 
   @Patch(':id')
   changeActivation(@Param('id') id: string, @User() user: IUser, @Body() body: { status: boolean }) {

@@ -42,7 +42,7 @@ export class License {
     permissions: Permission[];
 
     @Prop()
-    isActive: string;
+    isActive: boolean;
 
     @Prop({ type: Object })
     createdBy: {

@@ -28,7 +28,7 @@ export class LicensesService {
 
 
   async updateLincesesDaysLeft() {
-    const allLincenses = await this.licenseModel.find()
+    const allLincenses = await this.licenseModel.find({ isActive: true });
     for (const lincense of allLincenses) {
       const foundUser = await this.userModel.findOne({ email: lincense.userEmail })
       const daysLeft = Math.ceil((lincense.endDate.getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24))
@@ -73,7 +73,7 @@ export class LicensesService {
 
     if (foundUser) {
       if (foundUser.license) {
-        throw new BadRequestException(`User ${userEmail} đang có một license đã được kích hoạt`)
+        throw new BadRequestException(`Người dùng ${userEmail} đang có một License khác đã được kích hoạt`)
       }
     } else {
       throw new BadRequestException(`Không tìm thấy người dùng ${userEmail}`)
@@ -159,29 +159,34 @@ export class LicensesService {
       .populate({ path: "permissions", select: { _id: 1, apiPath: 1, name: 1, method: 1, module: 1 } })
   }
 
-  // async update(id: string, updateLicenseDto: UpdateLicenseDto, user: IUser) {
-  //   return await this.licenseModel.updateOne(
-  //     { _id: id },
-  //     {
-  //       ...updateLicenseDto,
-  //       updatedBy: {
-  //         _id: user._id,
-  //         email: user.email
-  //       }
-  //     }
-  //   );
-  // }
+  async update(id: string, updateLicenseDto: UpdateLicenseDto, user: IUser) {
+    return await this.licenseModel.updateOne(
+      { _id: id },
+      {
+        ...updateLicenseDto,
+        updatedBy: {
+          _id: user._id,
+          email: user.email
+        }
+      }
+    );
+  }
 
   async changeActivation(id: string, user: IUser, status: boolean) {
 
-    let updatedLicense: any
-    if (status) {
-      //@ts-ignore
-      updatedLicense = (await this.licenseModel.findOne({ _id: id }))._id
-    } else {
-      updatedLicense = ''
-    }
+    const foundLicense = await this.licenseModel.findOne({ _id: id })
 
+    if (status) {
+      const foundUser = await this.usersService.findOneByUsername(foundLicense.userEmail)
+      if (foundUser) {
+        if (foundUser.license) {
+          throw new BadRequestException(`Người dùng ${foundLicense.userEmail} đang có một License khác đã được kích hoạt`)
+        }
+      } else {
+        throw new BadRequestException(`Không tìm thấy người dùng ${foundLicense.userEmail}`)
+      }
+    }
+   
     return await this.licenseModel.updateOne(
       { _id: id },
 
@@ -196,8 +201,8 @@ export class LicensesService {
 
       // Chính sửa xoá License ở User
       await this.userModel.updateOne(
-        { email: user.email },
-        { license: updatedLicense }
+        { email: foundLicense.userEmail },
+        { license: status ? foundLicense._id : '' }
       )
     );
   }

@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, Put } from '@nestjs/common';
 import { ProductsService } from './products.service';
 import { CreateProductDto } from './dto/create-Product.dto';
 import { UpdateProductDto } from './dto/update-Product.dto';
@@ -36,10 +36,10 @@ export class ProductsController {
     return this.productsService.findOne(id);
   }
 
-  // @Patch(':id')
-  // update(@Param('id') id: string, @Body() updateProductDto: UpdateProductDto, @User() user: IUser) {
-  //   return this.productsService.update(id, updateProductDto, user);
-  // }
+  @Put(':id')
+  update(@Param('id') id: string, @Body() updateProductDto: UpdateProductDto, @User() user: IUser) {
+    return this.productsService.update(id, updateProductDto, user);
+  }
 
   @Patch(':id')
   changeActivation(@Param('id') id: string, @User() user: IUser, @Body() body: { status: boolean }) {

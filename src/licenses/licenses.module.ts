@@ -12,6 +12,7 @@ import { MailService } from 'src/mail/mail.service';
 import { MulterModule } from '@nestjs/platform-express';
 import { MulterConfigService } from './multer.config';
 
+@Global()
 @Module({
   imports: [
     MongooseModule.forFeature([

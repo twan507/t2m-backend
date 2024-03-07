@@ -6,6 +6,7 @@ import { Discountcode, DiscountcodeDocument } from './schemas/discountcode.schem
 import { SoftDeleteModel } from 'soft-delete-plugin-mongoose';
 import { IUser } from 'src/users/users.interface';
 import aqp from 'api-query-params';
+import { License, LicenseDocument } from 'src/licenses/schemas/license.schemas';
 
 @Injectable()
 export class DiscountcodesService {
@@ -13,6 +14,9 @@ export class DiscountcodesService {
   constructor(
     @InjectModel(Discountcode.name)
     private discountcodeModel: SoftDeleteModel<DiscountcodeDocument>,
+
+    @InjectModel(License.name)
+    private licenseModel: SoftDeleteModel<LicenseDocument>,
   ) { }
 
   async create(createDiscountcodeDto: CreateDiscountcodeDto, user: IUser, type: string) {
@@ -81,6 +85,14 @@ export class DiscountcodesService {
   }
 
   async changeActivation(id: string, user: IUser, status: boolean) {
+
+    const foundCode = await this.discountcodeModel.findOne({ _id: id })
+    const foundLicense = await this.licenseModel.findOne({ discountCode: foundCode.code })
+
+    if (foundLicense && status === false) {
+      throw new BadRequestException(`Không thể vô hiệu hoá mã ${foundCode.code} do vẫn còn License đang sử dụng`)
+    }
+
     return await this.discountcodeModel.updateOne(
       { _id: id },
 
@@ -91,8 +103,8 @@ export class DiscountcodesService {
           _id: user._id,
           email: user.email
         }
-      },
-    );
+      }
+    )
   }
 
   async findAll(currentPage: number, limit: number, qs: string) {
