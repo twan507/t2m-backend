@@ -39,6 +39,11 @@ export class DiscountcodesController {
     return this.discountcodesService.findOne(id);
   }
 
+  @Post('find-by-code')
+  findByCode(@Body() body: { code: string }) {
+    return this.discountcodesService.findByCode(body.code);
+  }
+
   @Patch(':id')
   changeActivation(@Param('id') id: string, @User() user: IUser, @Body() body: { status: boolean }) {
     return this.discountcodesService.changeActivation(id, user, body.status);

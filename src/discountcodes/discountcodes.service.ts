@@ -143,6 +143,14 @@ export class DiscountcodesService {
     return code;
   }
 
+  async findByCode(code: string) {
+    const foundCode = await this.discountcodeModel.findOne({ code })
+    if (!foundCode) {
+      throw new BadRequestException("Không tìm thấy mã giảm giá");
+    }
+    return foundCode;
+  }
+
   async findAllSponsorCode() {
     const codeList = await this.discountcodeModel.find({ type: { $ne: 'DISCOUNT' }, isActive: true })
     return codeList.map(item => item.code)

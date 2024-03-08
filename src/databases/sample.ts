@@ -144,6 +144,26 @@ export const INIT_PERMISSIONS = [
             "email": "admin@t2m.vn"
         }
     },
+    {
+        "_id": "65b08faba2aa0ebca4fe86d0",
+        "name": "Create a discount code",
+        "apiPath": "/api/v1/discountcodes/find-by-code",
+        "method": "POST",
+        "module": "DISCOUNTCODES",
+        "createdBy": {
+            "_id": "65bc76897e9d32d76d997a48",
+            "email": "admin@t2m.vn"
+        },
+        "isDeleted": false,
+        "deletedAt": null,
+        "createdAt": "2023-06-15T06:47:49.369Z",
+        "updatedAt": "2023-06-15T06:54:05.131Z",
+        "__v": 0,
+        "updatedBy": {
+            "_id": "65bc76897e9d32d76d997a48",
+            "email": "admin@t2m.vn"
+        }
+    },
 
     {
         "_id": "65a4a7f9cfd5dc30fca31a4b",
@@ -431,6 +451,26 @@ export const INIT_PERMISSIONS = [
         "_id": "65bc7e891e8fa9b2446f510e",
         "name": "Create a Product",
         "apiPath": "/api/v1/products",
+        "method": "POST",
+        "module": "PRODUCTS",
+        "createdBy": {
+            "_id": "65bc76897e9d32d76d997a48",
+            "email": "admin@t2m.vn"
+        },
+        "isDeleted": false,
+        "deletedAt": null,
+        "createdAt": "2023-06-15T06:47:49.369Z",
+        "updatedAt": "2023-06-15T06:54:05.131Z",
+        "__v": 0,
+        "updatedBy": {
+            "_id": "65bc76897e9d32d76d997a48",
+            "email": "admin@t2m.vn"
+        }
+    },
+    {
+        "_id": "65eb35835fcc40142b652159",
+        "name": "Find a Product by name",
+        "apiPath": "/api/v1/products/find-by-product",
         "method": "POST",
         "module": "PRODUCTS",
         "createdBy": {

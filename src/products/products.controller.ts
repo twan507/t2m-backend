@@ -14,6 +14,13 @@ export class ProductsController {
     return this.productsService.create(createProductDto, user);
   }
 
+  @Post('find-by-product')
+  findProductByName(@Body() body: {name: string}) {
+    return this.productsService.findProductByName(body.name);
+  }
+
+
+
   @Get()
   @ResponseMessage("Fetch list Product with paginate")
   findAll(
