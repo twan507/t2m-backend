@@ -15,4 +15,4 @@ import { License, LicenseSchema } from 'src/licenses/schemas/license.schemas';
   providers: [DiscountcodesService],
   exports: [DiscountcodesService]
 })
-export class DiscountcodesModule {}
+export class DiscountcodesModule { }

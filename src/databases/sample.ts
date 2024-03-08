@@ -8,7 +8,7 @@ export const INIT_PERMISSIONS = [
         "name": "Find a discount code by id",
         "apiPath": "/api/v1/discountcodes/:id",
         "method": "GET",
-        "module": "PRODUCTS",
+        "module": "DISCOUNTCODES",
         "createdBy": {
             "_id": "65bc76897e9d32d76d997a48",
             "email": "admin@t2m.vn"
@@ -24,6 +24,26 @@ export const INIT_PERMISSIONS = [
         }
     },
 
+    {
+        "_id": "6575214e97dc30aabbbc80bf",
+        "name": "Update a discount code by id",
+        "apiPath": "/api/v1/discountcodes/:id",
+        "method": "PUT",
+        "module": "DISCOUNTCODES",
+        "createdBy": {
+            "_id": "65bc76897e9d32d76d997a48",
+            "email": "admin@t2m.vn"
+        },
+        "isDeleted": false,
+        "deletedAt": null,
+        "createdAt": "2023-06-15T06:47:49.369Z",
+        "updatedAt": "2023-06-15T06:54:05.131Z",
+        "__v": 0,
+        "updatedBy": {
+            "_id": "65bc76897e9d32d76d997a48",
+            "email": "admin@t2m.vn"
+        }
+    },
     {
         "_id": "65325cadf09c4caf4bc64eb8",
         "name": "Delete a discount code by id",
@@ -67,7 +87,7 @@ export const INIT_PERMISSIONS = [
     {
         "_id": "65e3cbb0a8eba7345a8ca892",
         "name": "Fetch all discount code with paginate",
-        "apiPath": "/api/v1/discountcodes/",
+        "apiPath": "/api/v1/discountcodes",
         "method": "GET",
         "module": "DISCOUNTCODES",
         "createdBy": {
@@ -165,9 +185,26 @@ export const INIT_PERMISSIONS = [
             "email": "admin@t2m.vn"
         }
     },
-
-
-
+    {
+        "_id": "65fc0e631d6fcf3d12911ed6",
+        "name": "Find user by email",
+        "apiPath": "/api/v1/users/find-by-email",
+        "method": "POST",
+        "module": "USERS",
+        "createdBy": {
+            "_id": "65bc76897e9d32d76d997a48",
+            "email": "admin@t2m.vn"
+        },
+        "isDeleted": false,
+        "deletedAt": null,
+        "createdAt": "2023-06-15T06:47:49.369Z",
+        "updatedAt": "2023-06-15T06:54:05.131Z",
+        "__v": 0,
+        "updatedBy": {
+            "_id": "65bc76897e9d32d76d997a48",
+            "email": "admin@t2m.vn"
+        }
+    },
 
 
     {

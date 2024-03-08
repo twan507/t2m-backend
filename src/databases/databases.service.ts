@@ -277,8 +277,8 @@ export class DatabasesService implements OnModuleInit {
                         _id: "65ab8fabd66c3811fa2c04d1",
                         userEmail: 'tradertruongdao@t2m.vn',
                         code: 'VIP001',
-                        discountPercent: [5, 10, 15, 20, 25],
-                        type: 'Admin',
+                        maxDiscount: 25,
+                        type: 'ADMIN',
                         isActive: true,
                         createdBy: {
                             "_id": "65bc76897e9d32d76d997a48",
@@ -289,8 +289,8 @@ export class DatabasesService implements OnModuleInit {
                         _id: "656ca0a8f38f38fdee1139ec",
                         userEmail: 'maigt@t2m.vn',
                         code: 'VIP002',
-                        discountPercent: [5, 10, 15, 20, 25],
-                        type: 'Admin',
+                        maxDiscount: 25,
+                        type: 'ADMIN',
                         isActive: true,
                         createdBy: {
                             "_id": "65bc76897e9d32d76d997a48",
@@ -301,8 +301,8 @@ export class DatabasesService implements OnModuleInit {
                         _id: "655efedb9aec0d54ae553dec",
                         userEmail: 'tuanba@t2m.vn',
                         code: 'VIP003',
-                        discountPercent: [5, 10, 15, 20, 25],
-                        type: 'Admin',
+                        maxDiscount: 25,
+                        type: 'ADMIN',
                         isActive: true,
                         createdBy: {
                             "_id": "65bc76897e9d32d76d997a48",
@@ -313,8 +313,8 @@ export class DatabasesService implements OnModuleInit {
                         _id: "659cfafcf65d2c86dd680ca0",
                         userEmail: 'ctv@t2m.vn',
                         code: 'CTV000',
-                        discountPercent: [5, 10, 15, 20, 25],
-                        type: 'Affiliate',
+                        maxDiscount: 25,
+                        type: 'CTV',
                         isActive: true,
                         createdBy: {
                             "_id": "65bc76897e9d32d76d997a48",

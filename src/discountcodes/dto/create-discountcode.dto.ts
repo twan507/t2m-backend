@@ -5,9 +5,9 @@ export class CreateDiscountcodeDto {
     @IsOptional()
     uesrEmail: string
 
-    @IsNotEmpty({message: "code không được để trống" })
+    @IsNotEmpty({ message: "code không được để trống" })
     code: string
 
-    @IsNotEmpty({message: "discountPercent không được để trống" })
-    discountPercent: number[]
+    @IsNotEmpty({ message: "maxDiscount không được để trống" })
+    maxDiscount: number
 }

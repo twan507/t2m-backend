@@ -19,9 +19,9 @@ export class DiscountcodesService {
     private licenseModel: SoftDeleteModel<LicenseDocument>,
   ) { }
 
-  async create(createDiscountcodeDto: CreateDiscountcodeDto, user: IUser, type: string) {
+  async create(createDiscountcodeDto: CreateDiscountcodeDto, user: IUser) {
 
-    const { code, discountPercent } = createDiscountcodeDto
+    const { code, maxDiscount } = createDiscountcodeDto
     const isExist = await this.discountcodeModel.findOne({ code })
 
     if (isExist) {
@@ -29,7 +29,7 @@ export class DiscountcodesService {
     }
 
     const newDiscountCode = await this.discountcodeModel.create({
-      code, discountPercent, isActive: true, type,
+      code, maxDiscount, isActive: true, type: 'DISCOUNT',
       createdBy: {
         _id: user._id,
         email: user.email
@@ -42,7 +42,7 @@ export class DiscountcodesService {
     }
   }
 
-  async addCode(code: string, discountPercent: number[], type: string, user: IUser, userEmail: string) {
+  async addCode(code: string, maxDiscount: number, type: string, user: IUser, userEmail: string) {
 
     const foundUser = await this.discountcodeModel.findOne({ userEmail })
     if (foundUser) {
@@ -64,7 +64,7 @@ export class DiscountcodesService {
     }
 
     await this.discountcodeModel.create({
-      userEmail, code, discountPercent, isActive: true, type,
+      userEmail, code, maxDiscount, isActive: true, type: 'CTV',
       createdBy: {
         _id: user._id,
         email: user.email
@@ -144,14 +144,33 @@ export class DiscountcodesService {
   }
 
   async findAllSponsorCode() {
-    const codeList = await this.discountcodeModel.find({ type: { $ne: 'Discount' },  isActive: true })
+    const codeList = await this.discountcodeModel.find({ type: { $ne: 'DISCOUNT' }, isActive: true })
     return codeList.map(item => item.code)
+  }
+
+  async update(id: string, updateDiscountcodeDto: UpdateDiscountcodeDto, user: IUser) {
+
+    // const foundCode = await this.discountcodeModel.findOne({ _id: id })
+    // if (foundCode?.isActive === true) {
+    //   throw new BadRequestException("Không thể chỉnh sửa mã đang ở trạng thái kích hoạt");
+    // }
+
+    return await this.discountcodeModel.updateOne(
+      { _id: id },
+      {
+        ...updateDiscountcodeDto,
+        updatedBy: {
+          _id: user._id,
+          email: user.email
+        }
+      }
+    );
   }
 
   async remove(id: string, user: IUser) {
     const foundCode = await this.discountcodeModel.findOne({ _id: id });
-    if (!foundCode) {
-      throw new BadRequestException("Không tìm thấy User")
+    if (foundCode.isActive) {
+      throw new BadRequestException("Không thể xoá mã đang được kích hoạt");
     }
     // Cập nhật thông tin người xóa
     await this.discountcodeModel.updateOne(

@@ -209,8 +209,8 @@ export class LicensesService {
 
   async remove(id: string, user: IUser) {
     const foundLicense = await this.licenseModel.findOne({ _id: id });
-    if (!foundLicense) {
-      throw new BadRequestException("Không tìm thấy License")
+    if (foundLicense.isActive) {
+      throw new BadRequestException("Không thể xoá License đang được kích hoạt");
     }
     // Cập nhật thông tin người xóa
     await this.licenseModel.updateOne(

@@ -20,9 +20,6 @@ export class CreateUserDto {
     @Length(10, 10, { message: "Số điện thoại không đúng định dạng" })
     phoneNumber: string
 
-    @IsNotEmpty({ message: "Role không được để trống" })
-    role: string
-
     @IsOptional()
     sponsorCode: string
 }

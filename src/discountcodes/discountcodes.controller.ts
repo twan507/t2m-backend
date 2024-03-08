@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, Put } from '@nestjs/common';
 import { DiscountcodesService } from './discountcodes.service';
 import { CreateDiscountcodeDto } from './dto/create-discountcode.dto';
 import { UpdateDiscountcodeDto } from './dto/update-discountcode.dto';
@@ -14,7 +14,7 @@ export class DiscountcodesController {
     @User() user: IUser,
     @Body() createDiscountcodeDto: CreateDiscountcodeDto
   ) {
-    return this.discountcodesService.create(createDiscountcodeDto, user, 'Discount');
+    return this.discountcodesService.create(createDiscountcodeDto, user);
   }
 
   @Get()
@@ -44,6 +44,10 @@ export class DiscountcodesController {
     return this.discountcodesService.changeActivation(id, user, body.status);
   }
 
+  @Put(':id')
+  update(@Param('id') id: string, @Body() updateDiscountcodeDto: UpdateDiscountcodeDto, @User() user: IUser) {
+    return this.discountcodesService.update(id, updateDiscountcodeDto, user);
+  }
 
   @Delete(':id')
   remove(@Param('id') id: string, @User() user: IUser) {

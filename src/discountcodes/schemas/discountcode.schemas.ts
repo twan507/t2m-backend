@@ -13,7 +13,7 @@ export class Discountcode {
     code: string
 
     @Prop()
-    discountPercent: number[]
+    maxDiscount: number
 
     @Prop()
     type: string

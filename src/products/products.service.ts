@@ -134,15 +134,10 @@ export class ProductsService {
   }
 
   async remove(id: string, user: IUser) {
-    // Kiểm tra xem người dùng có tồn tại
-    const foundUser = await this.productModel.findOne({ _id: id });
-    // Nếu không tìm thấy người dùng hoặc người dùng là admin
-    if (!foundUser) {
-      throw new BadRequestException("Không tìm thấy Product");
-    } else if (foundUser.name in ["ADMIN", "USER"]) {
-      throw new BadRequestException("Không thể xoá Product ADMIN và USER")
+    const foundProduct = await this.productModel.findOne({ _id: id });
+    if (foundProduct.isActive) {
+      throw new BadRequestException("Không thể xoá sản phẩm đang được kích hoạt");
     }
-    // Cập nhật thông tin người xóa
     await this.productModel.updateOne(
       { _id: id },
       {

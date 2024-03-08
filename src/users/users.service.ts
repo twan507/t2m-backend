@@ -33,12 +33,16 @@ export class UsersService {
   }
 
   isValidPassword(password: string, hash: string) {
+    console.log(password, hash)
     return compareSync(password, hash)
   }
 
   findOneByUsername(username: string) {
     return this.userModel.findOne({ email: username })
-    // .populate({ path: "role", select: { name: 1 } })
+  }
+
+  findByEmail(username: string) {
+    return this.userModel.findOne({ email: username }).select("-password -tokens")
   }
 
   async manageCTV(user: IUser, email: string, ctvCode: string) {
@@ -48,7 +52,7 @@ export class UsersService {
     if (currentRole === 'T2M USER') {
 
       //Cập nhật mã CTV vào phần mã giảm giá
-      await this.discountcodesService.addCode(ctvCode, [5, 10, 15, 20, 25], 'Affiliate', user, email)
+      await this.discountcodesService.addCode(ctvCode, 25, 'Affiliate', user, email)
 
       //Cập nhật role CTV
       await this.userModel.updateOne(
@@ -136,14 +140,13 @@ export class UsersService {
   }
 
   async create(createUserDto: CreateUserDto, user: IUser) {
-    const { email, password, name, phoneNumber, sponsorCode, role } = createUserDto
+    const { email, password, name, phoneNumber, sponsorCode } = createUserDto
 
     const isExist = await this.userModel.findOne({ email, isDeleted: false })
     if (isExist) {
       throw new BadRequestException(`Email: ${email} đã tồn tại, vui lòng sử dụng email khác`)
     }
 
-    const roleId = await this.roleModel.findOne({ name: role })
     const hashPassword = this.getHashPassword(password)
     let newUser = await this.userModel.create({
       email,
@@ -153,7 +156,7 @@ export class UsersService {
       license: "",
       affiliateCode: "",
       sponsorCode: sponsorCode ? sponsorCode : "",
-      role: roleId.name,
+      role: "T2M USER",
       createdBy: {
         _id: user._id,
         email: user.email
@@ -285,8 +288,10 @@ export class UsersService {
     const foundUser = await this.userModel.findOne({ _id: id });
     if (!foundUser) {
       throw new BadRequestException("Không tìm thấy User")
-    } else if (foundUser.email === "admin@t2m.vn") {
-      throw new BadRequestException("Không thể xoá tài khoản Admin")
+    } else if (foundUser.role !== "T2M USER") {
+      throw new BadRequestException("Chỉ có thể xoá người dùng có Role là USER")
+    } else if (foundUser.license.toString() !== '') {
+      throw new BadRequestException("Không thể xoá tài có License đang được kích hoạt")
     }
     // Cập nhật thông tin người xóa
     await this.userModel.updateOne(

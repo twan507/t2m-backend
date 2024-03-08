@@ -56,7 +56,7 @@ export class UsersController {
 
   @Post('manage-ctv')
   manageCTV(
-    @Body() body: {email: string, ctvCode: string},
+    @Body() body: { email: string, ctvCode: string },
     @User() user: IUser,
   ) {
     return this.usersService.manageCTV(user, body.email, body.ctvCode)
@@ -81,6 +81,11 @@ export class UsersController {
     @User() user: IUser
   ) {
     return this.usersService.findAllDependent(+currentPage, +limit, qs, user);
+  }
+
+  @Post('find-by-email')
+  findByEmail(@Body() body: { email: string }) {
+    return this.usersService.findByEmail(body.email);
   }
 
   @Get(':id')
