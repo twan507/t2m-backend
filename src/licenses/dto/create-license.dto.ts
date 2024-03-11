@@ -12,4 +12,10 @@ export class CreateLicenseDto {
     @IsOptional()
     discountCode: string
 
+    @IsNotEmpty({ message: "discountPercent không được để trống" })
+    discountPercent: string
+
+    @IsNotEmpty({ message: "finalPrice không được để trống" })
+    finalPrice: string
+
 }

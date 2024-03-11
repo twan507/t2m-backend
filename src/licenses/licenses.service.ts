@@ -67,7 +67,7 @@ export class LicensesService {
     if (!file) {
       throw new BadRequestException(`Hình ảnh xác mình chưa đúng hoặc bị thiếu`)
     }
-    const { userEmail, product } = createLicenseDto
+    const { userEmail, product, discountCode, discountPercent, finalPrice } = createLicenseDto
     const foundProduct = await this.productsService.findProductByName(product)
     const foundUser = await this.usersService.findOneByUsername(userEmail)
 
@@ -94,15 +94,16 @@ export class LicensesService {
     const daysLeft = (endDate.getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24)
 
     const newLicense = await this.licenseModel.create({
-      startDate,
-      endDate,
-      daysLeft,
+      startDate, endDate, daysLeft,
       userEmail,
-      product: foundProduct.name,
+      product,
+      discountCode,
+      discountPercent,
+      finalPrice,
+      imageConfirm: file.buffer,
       accessLevel: foundProduct.accessLevel,
       permissions: foundProduct.permissions,
       isActive: true,
-      imageConfirm: file.buffer,
       createdBy: {
         _id: user._id,
         email: user.email
@@ -186,7 +187,7 @@ export class LicensesService {
         throw new BadRequestException(`Không tìm thấy người dùng ${foundLicense.userEmail}`)
       }
     }
-   
+
     return await this.licenseModel.updateOne(
       { _id: id },
 

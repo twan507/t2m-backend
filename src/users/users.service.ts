@@ -37,11 +37,11 @@ export class UsersService {
   }
 
   findOneByUsername(username: string) {
-    return this.userModel.findOne({ email: username })
+    return this.userModel.findOne({ email: username, isDeleted: false })
   }
 
   findByEmail(username: string) {
-    return this.userModel.findOne({ email: username }).select("-password -tokens")
+    return this.userModel.findOne({ email: username, isDeleted: false }).select("-password -tokens")
   }
 
   async manageCTV(user: IUser, email: string, ctvCode: string) {
