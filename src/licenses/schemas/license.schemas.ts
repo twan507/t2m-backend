@@ -35,9 +35,6 @@ export class License {
     @Prop()
     finalPrice: number;
 
-    @Prop()
-    imageConfirm: string;
-
     @Prop({ type: [Types.ObjectId], ref: Permission.name })
     permissions: Permission[];
 
