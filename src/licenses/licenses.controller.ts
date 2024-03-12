@@ -24,9 +24,8 @@ export class LicensesController {
   create(
     @Body() createLicenseDto: CreateLicenseDto,
     @User() user: IUser,
-    @UploadedFile() file: Express.Multer.File
   ) {
-    return this.licensesService.create(createLicenseDto, user, file);
+    return this.licensesService.create(createLicenseDto, user);
   }
 
   @Get()

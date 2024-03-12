@@ -13,6 +13,7 @@ import { ProductsModule } from './products/products.module';
 import { MailModule } from './mail/mail.module';
 import { ScheduleModule } from '@nestjs/schedule';
 import { DiscountcodesModule } from './discountcodes/discountcodes.module';
+import { FilesModule } from './files/files.module';
 require('dotenv').config()
 
 @Module({
@@ -36,6 +37,7 @@ require('dotenv').config()
     ProductsModule,
     MailModule,
     DiscountcodesModule,
+    FilesModule,
   ],
   controllers: [AppController],
   providers: [AppService],

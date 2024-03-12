@@ -62,12 +62,9 @@ export class LicensesService {
     }
   }
 
-  async create(createLicenseDto: CreateLicenseDto, user: IUser, file: Express.Multer.File) {
-
-    if (!file) {
-      throw new BadRequestException(`Hình ảnh xác mình chưa đúng hoặc bị thiếu`)
-    }
-    const { userEmail, product, discountCode, discountPercent, finalPrice } = createLicenseDto
+  async create(createLicenseDto: CreateLicenseDto, user: IUser) {
+    
+    const { userEmail, product, discountCode, discountPercent, finalPrice, imageConfirm } = createLicenseDto
     const foundProduct = await this.productsService.findProductByName(product)
     const foundUser = await this.usersService.findOneByUsername(userEmail)
 
@@ -100,7 +97,7 @@ export class LicensesService {
       discountCode,
       discountPercent,
       finalPrice,
-      imageConfirm: file.buffer,
+      imageConfirm,
       accessLevel: foundProduct.accessLevel,
       permissions: foundProduct.permissions,
       isActive: true,

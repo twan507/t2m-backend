@@ -18,4 +18,7 @@ export class CreateLicenseDto {
     @IsNotEmpty({ message: "finalPrice không được để trống" })
     finalPrice: string
 
+    @IsNotEmpty({ message: "imageConfirm không được để trống" })
+    imageConfirm: string
+
 }
