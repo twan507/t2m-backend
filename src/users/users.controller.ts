@@ -2,7 +2,7 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestj
 import { UsersService } from './users.service';
 import { AdminChangePasswordDto, ChangePasswordDto, CreateUserDto, ForgetPasswordDto, SendPasswordTokenDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { Public, ResponseMessage, User } from 'src/decorator/customize';
+import { Public, ResponseMessage, SkipCheckPermission, User } from 'src/decorator/customize';
 import { IUser } from './users.interface';
 
 @Controller('users')
@@ -81,6 +81,13 @@ export class UsersController {
     @User() user: IUser
   ) {
     return this.usersService.findAllDependent(+currentPage, +limit, qs, user);
+  }
+
+  @SkipCheckPermission()
+  @Get('email-list')
+  @ResponseMessage("Get list uesr email")
+  findEmailList() {
+    return this.usersService.findEmailList();
   }
 
   @Post('find-by-email')

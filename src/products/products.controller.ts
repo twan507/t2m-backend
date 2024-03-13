@@ -2,7 +2,7 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, Query, Put } from '@
 import { ProductsService } from './products.service';
 import { CreateProductDto } from './dto/create-Product.dto';
 import { UpdateProductDto } from './dto/update-Product.dto';
-import { Public, ResponseMessage, SkipCheckPermission, User } from 'src/decorator/customize';
+import { ResponseMessage, SkipCheckPermission, User } from 'src/decorator/customize';
 import { IUser } from 'src/users/users.interface';
 
 @Controller('products')
@@ -19,8 +19,6 @@ export class ProductsController {
     return this.productsService.findProductByName(body.name);
   }
 
-
-
   @Get()
   @ResponseMessage("Fetch list Product with paginate")
   findAll(
@@ -31,7 +29,7 @@ export class ProductsController {
     return this.productsService.findAll(+current, +pageSize, qs);
   }
 
-  @Public()
+  @SkipCheckPermission()
   @Get('active-list')
   @ResponseMessage("Get list active product")
   findActiveProducts() {

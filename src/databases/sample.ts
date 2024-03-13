@@ -387,7 +387,7 @@ export const INIT_PERMISSIONS = [
             "email": "admin@t2m.vn"
         }
     },
-        {
+    {
         "_id": "65efeaafdcd59afdc5fcc3ce",
         "name": "Update a Product by ID",
         "apiPath": "/api/v1/products/:id",
@@ -671,6 +671,26 @@ export const INIT_PERMISSIONS = [
         "_id": "65bc7689f9e97f993f03253b",
         "name": "Fetch a User by ID",
         "apiPath": "/api/v1/users/:id",
+        "method": "GET",
+        "module": "USERS",
+        "createdBy": {
+            "_id": "65bc76897e9d32d76d997a48",
+            "email": "admin@t2m.vn"
+        },
+        "isDeleted": false,
+        "deletedAt": null,
+        "createdAt": "2023-06-15T06:47:49.369Z",
+        "updatedAt": "2023-06-15T06:54:05.131Z",
+        "__v": 0,
+        "updatedBy": {
+            "_id": "65bc76897e9d32d76d997a48",
+            "email": "admin@t2m.vn"
+        }
+    },
+    {
+        "_id": "65bc7689f9e97f993f93672b",
+        "name": "Get list uesr email",
+        "apiPath": "/api/v1/users/email-list",
         "method": "GET",
         "module": "USERS",
         "createdBy": {

@@ -44,6 +44,11 @@ export class UsersService {
     return this.userModel.findOne({ email: username, isDeleted: false }).select("-password -tokens")
   }
 
+  async findEmailList() {
+    const productList = await this.userModel.find()
+    return productList.map(item => item.email)
+  }
+
   async manageCTV(user: IUser, email: string, ctvCode: string) {
 
     const currentRole = (await this.userModel.findOne({ email })).role

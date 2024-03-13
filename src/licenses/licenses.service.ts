@@ -63,7 +63,7 @@ export class LicensesService {
   }
 
   async create(createLicenseDto: CreateLicenseDto, user: IUser) {
-    
+
     const { userEmail, product, discountCode, discountPercent, finalPrice } = createLicenseDto
     const foundProduct = await this.productsService.findProductByName(product)
     const foundUser = await this.usersService.findOneByUsername(userEmail)
@@ -77,21 +77,20 @@ export class LicensesService {
     }
 
     // Tính toán lưu lại các ngày hiệu lực
-    const startDate = new Date();
     let endDate: Date;
-
     if (foundProduct.monthsDuration < 1) {
-      // Nếu monthsDuration nhỏ hơn 1, thêm 7 ngày vào startDate, cho bản dùng thử
-      endDate = new Date(startDate.getTime() + (7 * 24 * 60 * 60 * 1000)); // 7 days in milliseconds
+      // Nếu monthsDuration nhỏ hơn 1, thêm 7 ngày cho bản dùng thử
+      endDate = new Date(new Date().getTime() + (7 * 24 * 60 * 60 * 1000)); // 7 days in milliseconds
     } else {
       // Nếu monthsDuration lớn hơn hoặc bằng 1, thực hiện thêm tháng như bình thường
-      endDate = new Date(startDate.setMonth(startDate.getMonth() + foundProduct.monthsDuration));
+      endDate = new Date(new Date().setMonth(new Date().getMonth() + foundProduct.monthsDuration));
     }
 
     const daysLeft = (endDate.getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24)
 
     const newLicense = await this.licenseModel.create({
-      startDate, endDate, daysLeft,
+      startDate: new Date(),
+      endDate, daysLeft,
       userEmail,
       product,
       discountCode,
