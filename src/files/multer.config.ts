@@ -35,11 +35,17 @@ export class MulterConfigService implements MulterOptionsFactory {
                     cb(null, join(this.getRootPath(), `src/files/images/${folder}`))
                 },
                 filename: (req, file, cb) => {
-                    // let baseName = path.basename(file.originalname, extName);
-                    // let finalName = `${baseName}-${Date.now()}${extName}`
+                    function getCurrentDateDDMMYYYY(): string {
+                        const currentDate = new Date();
+                        const day = String(currentDate.getDate()).padStart(2, '0');
+                        const month = String(currentDate.getMonth() + 1).padStart(2, '0');
+                        const year = currentDate.getFullYear();
+
+                        return day + month + year;
+                    }
 
                     let extName = path.extname(file.originalname);
-                    let finalName = `${req.headers.email}${extName}`
+                    let finalName = `${req.headers.email}-${getCurrentDateDDMMYYYY()}${extName}`
                     cb(null, finalName)
                 },
             }),
