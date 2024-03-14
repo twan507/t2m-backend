@@ -133,8 +133,8 @@ export class UsersService {
             },
           }
         )
-
         await this.mailService.changePasswordEmail(foundUser.name, foundUser.email)
+        return 'ok'
       } else {
         throw new BadRequestException("Sai mật khẩu")
       }
@@ -268,6 +268,18 @@ export class UsersService {
     }
   }
 
+  async userUpdate(updateUserDto: UpdateUserDto, user: IUser) {
+    return await this.userModel.updateOne(
+      { email: user.email },
+      {
+        ...updateUserDto,
+        updatedBy: {
+          _id: user._id,
+          email: user.email
+        }
+      }
+    );
+  }
 
   async update(id: string, updateUserDto: UpdateUserDto, user: IUser) {
     const foundUser = await this.userModel.findOne({ _id: id });
@@ -373,9 +385,10 @@ export class UsersService {
 
   async sendPasswordToken(sendPasswordTokenDto: SendPasswordTokenDto) {
     const token = Math.floor(Math.random() * 1000000).toString().padStart(6, '0');
-    const expiresAt = new Date(new Date().getTime() + 60000);
-    const customerName = (await (this.userModel.findOne({ email: sendPasswordTokenDto.email }))).name
-    if (customerName) {
+    const expiresAt = new Date(new Date().getTime() + 60000*5);
+
+    const foundUser = await this.userModel.findOne({ email: sendPasswordTokenDto.email })
+    if (foundUser) {
       await this.userModel.updateOne(
         { email: sendPasswordTokenDto.email },
         {
@@ -385,9 +398,10 @@ export class UsersService {
           }
         }
       )
-      await this.mailService.forgetPasswordEmail(customerName, token, sendPasswordTokenDto.email)
+      await this.mailService.forgetPasswordEmail(foundUser.name, token, sendPasswordTokenDto.email)
+      return 'ok'
     } else {
-      throw new BadRequestException("Không tìm thấy người dùng")
+      throw new BadRequestException("Email không tồn tại")
     }
   }
 }

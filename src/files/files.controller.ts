@@ -20,6 +20,33 @@ export class FilesController {
     }
   }
 
+  // @Get('')
+  // @SkipCheckPermission()
+  // getFile(
+  //   @Query("fileName") fileName: string,
+  //   @Query("module") module: string,
+  //   @Res() res: Response
+  // ) {
+  //   const directoryPath = path.join(__dirname, '..', `files/images/${module}`);
+
+  //   // Đọc danh sách tất cả các file trong thư mục
+  //   fs.readdir(directoryPath, (err, files) => {
+  //     if (err) {
+  //       throw new BadRequestException('Directory not found');
+  //     }
+
+  //     // Tìm file có tên khớp và không quan tâm đến phần mở rộng
+  //     const foundFile = files.find(file => path.basename(file, path.extname(file)) === fileName);
+
+  //     if (foundFile) {
+  //       const filePath = path.join(directoryPath, foundFile);
+  //       return res.sendFile(path.resolve(filePath));
+  //     } else {
+  //       throw new BadRequestException('File not found');
+  //     }
+  //   });
+  // }
+
   @Get('')
   @SkipCheckPermission()
   getFile(
@@ -27,23 +54,8 @@ export class FilesController {
     @Query("module") module: string,
     @Res() res: Response
   ) {
-    const directoryPath = path.join(__dirname, '..', `files/images/${module}`);
-
-    // Đọc danh sách tất cả các file trong thư mục
-    fs.readdir(directoryPath, (err, files) => {
-      if (err) {
-        throw new BadRequestException('Directory not found');
-      }
-
-      // Tìm file có tên khớp và không quan tâm đến phần mở rộng
-      const foundFile = files.find(file => path.basename(file, path.extname(file)) === fileName);
-
-      if (foundFile) {
-        const filePath = path.join(directoryPath, foundFile);
-        return res.sendFile(path.resolve(filePath));
-      } else {
-        throw new BadRequestException('File not found');
-      }
-    });
+    return this.filesService.getFile(fileName, module, res);
   }
+
 }
+

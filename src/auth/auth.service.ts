@@ -62,7 +62,7 @@ export class AuthService {
     }
 
     async login(user: IUser) {
-        const { _id, name, email, role, affiliateCode, sponsorCode, tokens, permissions, licenseInfo } = user;
+        const { _id, name, email, phoneNumber, role, affiliateCode, sponsorCode, tokens, permissions, licenseInfo } = user;
 
         const payload = {
             sub: "token login", iss: "from server",
@@ -82,7 +82,7 @@ export class AuthService {
 
         return {
             access_token: this.jwtService.sign(payload),
-            user: { _id, name, email, role, affiliateCode, sponsorCode, licenseInfo, permissions }
+            user: { _id, name, email, phoneNumber, role, affiliateCode, sponsorCode, licenseInfo, permissions }
         };
     }
 

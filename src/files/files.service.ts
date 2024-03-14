@@ -1,27 +1,29 @@
-// file.service.ts
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import * as fs from 'fs';
 import * as path from 'path';
 import { promisify } from 'util';
+import { Response } from 'express';
 
 const readdir = promisify(fs.readdir);
 
 @Injectable()
 export class FilesService {
-  async findFile(module: string, fileName: string): Promise<string> {
+  async getFile(fileName: string, module: string, res: Response): Promise<void> {
     const directoryPath = path.join(__dirname, '..', `files/images/${module}`);
 
     try {
       const files = await readdir(directoryPath);
+
       const foundFile = files.find(file => path.basename(file, path.extname(file)) === fileName);
-
-      if (!foundFile) {
-        throw new NotFoundException('File not found');
+      if (foundFile) {
+        const filePath = path.join(directoryPath, foundFile);
+        res.sendFile(path.resolve(filePath));
+      } else {
+        throw new BadRequestException('Không tìm thấy ảnh!');
       }
-
-      return path.join(directoryPath, foundFile);
     } catch (err) {
-      throw new NotFoundException('Directory not found');
+      throw new BadRequestException('Không tìm thấy ảnh!');
     }
   }
 }
+
