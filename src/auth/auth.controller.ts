@@ -1,7 +1,7 @@
 import { Controller, Post, UseGuards, Body, Res, Req, Get, Headers } from '@nestjs/common';
 import { LocalAuthGuard } from './local-auth.guard';
 import { AuthService } from './auth.service';
-import { Public, ResponseMessage, User } from 'src/decorator/customize';
+import { Public, ResponseMessage, SkipCheckPermission, User } from 'src/decorator/customize';
 import { RegisterUserDto } from 'src/users/dto/create-user.dto';
 import { Response, Request } from 'express';
 import { IUser } from 'src/users/users.interface';
@@ -42,13 +42,11 @@ export class AuthController {
         return this.authService.register(registerUserDto);
     }
 
-    @ResponseMessage("Get user infomation")
+    @ResponseMessage("Get login status")
+    @SkipCheckPermission()
     @Get('/account')
-    async handleGetAccount(@User() user: IUser) {
-        //Query xuống DB để lấy permissions từ user đã được đăng kí
-        const temp = await this.rolesService.findOne(user.role) as any
-        user.permissions = temp.permissions
-        return { user }
+    handleGetAccount() {
+        return true
     }
 
     @ResponseMessage("Logout User")

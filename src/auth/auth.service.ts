@@ -7,6 +7,7 @@ import { Response } from 'express';
 import { RolesService } from 'src/roles/roles.service';
 import { LicensesService } from 'src/licenses/licenses.service';
 import ms from 'ms';
+import jwt from 'jsonwebtoken';
 
 
 @Injectable()
