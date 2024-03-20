@@ -1,7 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument, Types } from 'mongoose';
 import { Permission } from 'src/permissions/schemas/permission.schemas';
-import { Product } from 'src/products/schemas/Product.schemas';
+import { Product } from 'src/products/schemas/product.schemas';
 
 export type LicenseDocument = HydratedDocument<License>;
 
@@ -25,7 +25,7 @@ export class License {
 
     @Prop()
     accessLevel: number
-    
+
     @Prop()
     discountCode: string;
 

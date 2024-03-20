@@ -6,7 +6,7 @@ import { ADMIN_ROLE, CTV_ROLE, INIT_PERMISSIONS, USER_ROLE } from './sample';
 import { Role, RoleDocument } from 'src/roles/schemas/role.schemas';
 import { Permission, PermissionDocument } from 'src/permissions/schemas/permission.schemas';
 import { User, UserDocument } from 'src/users/schemas/user.schemas';
-import { Product, ProductDocument } from 'src/products/schemas/Product.schemas';
+import { Product, ProductDocument } from 'src/products/schemas/product.schemas';
 import { Discountcode, DiscountcodeDocument } from 'src/discountcodes/schemas/discountcode.schemas';
 
 @Injectable()

@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { CreateLicenseDto } from './dto/create-License.dto';
-import { UpdateLicenseDto } from './dto/update-License.dto';
+import { CreateLicenseDto } from './dto/create-license.dto';
+import { UpdateLicenseDto } from './dto/update-license.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { License, LicenseDocument } from './schemas/license.schemas';
 import { SoftDeleteModel } from 'soft-delete-plugin-mongoose';

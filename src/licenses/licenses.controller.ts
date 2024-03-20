@@ -1,6 +1,6 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, Query, UseInterceptors, UploadedFile, Put } from '@nestjs/common';
-import { CreateLicenseDto } from './dto/create-License.dto';
-import { UpdateLicenseDto } from './dto/update-License.dto';
+import { CreateLicenseDto } from './dto/create-license.dto';
+import { UpdateLicenseDto } from './dto/update-license.dto';
 import { Public, ResponseMessage, User } from 'src/decorator/customize';
 import { IUser } from 'src/users/users.interface';
 import { LicensesService } from './licenses.service';

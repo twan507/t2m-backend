@@ -16,7 +16,7 @@ import { DiscountcodesModule } from 'src/discountcodes/discountcodes.module';
     { name: User.name, schema: UserSchema },
     { name: Permission.name, schema: PermissionSchema },
     { name: Role.name, schema: RoleSchema },
-    { name: Product.name, schema: ProductSchema } ,
+    { name: Product.name, schema: ProductSchema },
     { name: Discountcode.name, schema: DiscountcodeSchema }
   ])],
   controllers: [DatabasesController],

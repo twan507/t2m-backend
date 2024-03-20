@@ -1,13 +1,13 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, Query, Put } from '@nestjs/common';
 import { ProductsService } from './products.service';
-import { CreateProductDto } from './dto/create-Product.dto';
-import { UpdateProductDto } from './dto/update-Product.dto';
+import { CreateProductDto } from './dto/create-product.dto';
+import { UpdateProductDto } from './dto/update-product.dto';
 import { ResponseMessage, SkipCheckPermission, User } from 'src/decorator/customize';
 import { IUser } from 'src/users/users.interface';
 
 @Controller('products')
 export class ProductsController {
-  constructor(private readonly productsService: ProductsService) {}
+  constructor(private readonly productsService: ProductsService) { }
 
   @Post()
   create(@Body() createProductDto: CreateProductDto, @User() user: IUser) {
@@ -15,7 +15,7 @@ export class ProductsController {
   }
 
   @Post('find-by-product')
-  findProductByName(@Body() body: {name: string}) {
+  findProductByName(@Body() body: { name: string }) {
     return this.productsService.findProductByName(body.name);
   }
 
