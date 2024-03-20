@@ -101,7 +101,7 @@ export class AuthService {
 
         const user = await this.usersService.findOneByUsername(email)
 
-        if (user.tokens.includes(token)) {
+        if (user?.tokens.includes(token)) {
             return true
         } else {
             return false
