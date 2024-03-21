@@ -1,0 +1,11 @@
+version: '3.8'
+
+services:
+  nestjs-app:
+    container_name: nestjs-container
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: npm run start
+    ports:
+      - 8000:8000
